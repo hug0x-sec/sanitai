@@ -1,0 +1,2812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="referrer" content="no-referrer"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SanitAI — Sanitiza tus datos antes de enviarlos a la IA</title>
+<meta name="description" content="Detecta y elimina datos sensibles de tus prompts antes de enviarlos a ChatGPT, Claude u otras IAs. Emails, IBANs, contraseñas, API keys y más. Todo ocurre en tu navegador."/>
+<meta name="robots" content="index,follow"/>
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline'
+    https://cdn.sheetjs.com
+    https://cdnjs.cloudflare.com
+    https://fonts.googleapis.com
+    https://cdn.tailwindcss.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com;
+  img-src 'self' data:;
+  connect-src 'none';
+  object-src 'none';
+  base-uri 'self';
+  form-action 'none';
+"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════
+   SanitAI v20 — Design System
+   Inspiración: Linear · Vercel · Craft — NO genérico
+═══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Tokens: Light ── */
+:root{
+  --bg:        #EEF2F7;
+  --bg-2:      #E6EBF3;
+  --surface:   #FFFFFF;
+  --surface-2: #F5F7FB;
+  --border:    #D1D9E6;
+  --border-2:  #E2E8F2;
+  --text-1:    #18202E;
+  --text-2:    #3D4A5C;
+  --text-3:    #6B7A90;
+  --text-4:    #9AAABB;
+  --accent:    #2563EB;
+  --accent-lt: rgba(37,99,235,.08);
+  --accent-2:  #3B82F6;
+  --danger:    #DC2626;
+  --warn:      #D97706;
+  --success:   #059669;
+  --radius:    8px;
+  --radius-sm: 5px;
+  --shadow-sm: 0 1px 2px rgba(18,30,50,.06);
+  --shadow:    0 2px 8px rgba(18,30,50,.08);
+  --font:      -apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
+  --mono:      'JetBrains Mono','Fira Code','Cascadia Code',ui-monospace,monospace;
+  --transition-theme: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+/* ── Tokens: Dark ── */
+[data-theme="dark"]{
+  --bg:        #0B1120;
+  --bg-2:      #0F1629;
+  --surface:   #141D2F;
+  --surface-2: #1A2438;
+  --border:    #1E2D45;
+  --border-2:  #192540;
+  --text-1:    #E8EDF5;
+  --text-2:    #9AAFC8;
+  --text-3:    #566880;
+  --text-4:    #354357;
+  --accent:    #4D8EFF;
+  --accent-lt: rgba(77,142,255,.1);
+  --accent-2:  #6BA3FF;
+  --danger:    #F87171;
+  --warn:      #FBBF24;
+  --success:   #34D399;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.35);
+  --shadow:    0 3px 12px rgba(0,0,0,.4);
+}
+
+/* ── Base ── */
+html{scroll-behavior:smooth;font-size:14px}
+body{
+  font-family:var(--font);
+  color:var(--text-1);
+  background:var(--bg);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  transition:var(--transition-theme);
+}
+.page-wrap{min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fade-in{animation:fadeUp .2s ease}
+.spin{animation:spin .9s linear infinite}
+.hidden{display:none!important}
+
+/* ── Layout ── */
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* ── Header ── */
+.site-header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+  height:52px;
+}
+.header-inner{
+  height:100%;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;
+}
+
+/* Logo */
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none}
+.logo-icon{
+  width:28px;height:28px;
+  background:var(--accent);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.logo-name{font-size:14px;font-weight:600;color:var(--text-1);letter-spacing:-.02em}
+.logo-badge{
+  font-size:10px;font-weight:500;
+  color:var(--text-3);
+  background:var(--bg-2);
+  border:1px solid var(--border);
+  border-radius:3px;padding:1px 5px;
+}
+
+/* Score strip */
+.score-track{height:4px;border-radius:2px;background:var(--border);flex:1;min-width:48px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;transition:width .4s ease,background .4s}
+.header-score-wrap{display:flex;align-items:center;gap:7px}
+
+/* Security banner */
+.sec-banner{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--text-4);
+  padding:3px 9px;border-radius:4px;
+  border:1px solid var(--border);
+  background:var(--bg-2);
+  transition:all .3s;
+}
+.sec-banner.active{
+  color:var(--success);
+  border-color:rgba(5,150,105,.25);
+  background:rgba(5,150,105,.05);
+}
+
+/* Theme toggle */
+.theme-toggle{
+  width:30px;height:30px;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:1px solid var(--border);
+  color:var(--text-3);cursor:pointer;
+  transition:all .15s;font-size:14px;
+  flex-shrink:0;
+}
+.theme-toggle:hover{background:var(--bg-2);color:var(--text-1);border-color:var(--text-4)}
+
+/* ── Cards ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+}
+.card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border-2);
+  gap:8px;min-height:40px;
+}
+.card-label{
+  font-size:10px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-4);
+}
+
+/* ── Tabs ── */
+.tab-group{
+  display:flex;gap:1px;
+  background:var(--border);
+  border-radius:6px;padding:1px;
+}
+.tab-btn{
+  font-size:12px;font-weight:500;color:var(--text-3);
+  background:none;border:none;cursor:pointer;
+  padding:5px 12px;border-radius:5px;transition:all .12s;
+}
+.tab-btn.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
+.tab-btn:hover:not(.active){color:var(--text-2)}
+
+/* ── Mode buttons ── */
+.mode-group{display:flex;gap:1px;background:var(--border);border-radius:5px;padding:1px}
+.mode-btn{
+  font-size:11px;font-weight:500;color:var(--text-3);
+  background:none;border:none;cursor:pointer;
+  padding:4px 10px;border-radius:4px;transition:all .12s;
+}
+.mode-btn.active{background:var(--accent);color:#fff}
+.mode-btn:hover:not(.active){color:var(--text-2)}
+
+/* ── Buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--font);font-size:12px;font-weight:500;
+  padding:7px 14px;border-radius:var(--radius-sm);
+  border:1px solid transparent;cursor:pointer;
+  transition:all .12s;text-decoration:none;white-space:nowrap;
+  letter-spacing:-.01em;
+}
+.btn-primary{
+  background:var(--accent);color:#fff;
+  border-color:var(--accent);
+}
+.btn-primary:hover{background:var(--accent-2);transform:translateY(-1px)}
+.btn-primary:active{transform:none}
+.btn-secondary{
+  background:var(--surface-2);color:var(--text-2);
+  border-color:var(--border);
+}
+.btn-secondary:hover:not(:disabled){background:var(--bg-2);border-color:var(--text-4);color:var(--text-1)}
+.btn-secondary:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{
+  background:none;color:var(--text-3);border-color:var(--border);
+}
+.btn-ghost:hover:not(:disabled){background:var(--bg-2);color:var(--text-2)}
+.btn-ghost:disabled{opacity:.4;cursor:not-allowed}
+.btn-danger{background:none;color:var(--danger);border-color:var(--border)}
+.btn-danger:hover{background:rgba(220,38,38,.06);border-color:var(--danger)}
+.btn-sm{font-size:11px;padding:5px 10px}
+
+/* ── Textarea ── */
+.input-area{
+  width:100%;min-height:200px;resize:vertical;
+  font-family:var(--mono);font-size:12px;line-height:1.75;
+  color:var(--text-2);
+  background:var(--surface-2);
+  border:none;outline:none;padding:14px;
+  display:block;border-radius:0 0 var(--radius) var(--radius);
+  transition:background .15s;
+}
+.input-area:focus{background:var(--surface);color:var(--text-1)}
+.input-area::placeholder{color:var(--text-4)}
+
+/* ── Rule toggles ── */
+.rule-toggle{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--text-3);
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:4px;padding:3px 8px;cursor:pointer;
+  transition:all .12s;user-select:none;
+}
+.rule-toggle:hover{border-color:var(--text-4);color:var(--text-2)}
+.rule-toggle.on{
+  background:var(--accent-lt);
+  border-color:rgba(37,99,235,.25);
+  color:var(--accent);
+}
+.rule-toggle .dot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:background .15s}
+.rule-toggle.on .dot{background:var(--accent)}
+
+/* ── View tabs ── */
+.view-tab{
+  font-size:11px;font-weight:500;color:var(--text-3);
+  background:none;border:none;cursor:pointer;
+  padding:3px 9px;border-radius:4px;transition:all .1s;
+}
+.view-tab.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
+
+/* ── Token ── */
+.token{
+  display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  color:var(--accent);background:var(--accent-lt);
+  border:1px solid rgba(37,99,235,.2);
+  border-radius:3px;padding:0 4px;
+  vertical-align:baseline;letter-spacing:.01em;
+}
+
+/* ── Diff ── */
+mark.diff-del{
+  background:rgba(220,38,38,.08);color:var(--danger);
+  border-radius:3px;padding:0 3px;
+  text-decoration:line-through;opacity:.8;font-style:normal;
+}
+mark.diff-ins{
+  background:var(--accent-lt);color:var(--accent);
+  border-radius:3px;padding:0 3px;font-weight:600;font-style:normal;
+}
+
+/* ── Detection log ── */
+.det-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 12px;border-radius:5px;
+  cursor:pointer;transition:background .1s;border:1px solid transparent;gap:8px;
+}
+.det-row:hover{background:var(--bg-2);border-color:var(--border-2)}
+.det-explain{
+  display:none;font-size:11px;color:var(--text-3);
+  padding:6px 12px 8px;line-height:1.6;
+  border-top:1px solid var(--border-2);font-style:italic;
+}
+.det-open + .det-explain{display:block}
+
+/* ── Risk badge ── */
+.risk-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;letter-spacing:.01em}
+.risk-safe{background:rgba(5,150,105,.08);color:var(--success)}
+.risk-warn{background:rgba(217,119,6,.08);color:var(--warn)}
+.risk-high{background:rgba(220,38,38,.08);color:var(--danger)}
+
+/* ── Drop zone ── */
+.drop-zone{
+  border:1px dashed var(--border);border-radius:0 0 var(--radius) var(--radius);
+  padding:40px 20px;text-align:center;cursor:pointer;
+  background:var(--surface-2);transition:all .15s;
+}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:var(--accent-lt)}
+
+/* ── Stats ── */
+.stat-box{
+  background:var(--bg-2);border:1px solid var(--border-2);
+  border-radius:5px;padding:10px 12px;
+}
+.stat-num{font-size:20px;font-weight:600;color:var(--text-1);line-height:1}
+.stat-lbl{font-size:10px;color:var(--text-4);margin-top:2px;letter-spacing:.02em}
+
+/* ── Coverage ── */
+.cover-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text-3);padding:4px 0;
+  border-bottom:1px solid var(--border-2);
+}
+.cover-row:last-child{border-bottom:none}
+.cover-check{font-size:11px;color:var(--success);font-weight:700}
+.cover-plus{font-size:10px;color:var(--warn);font-weight:600}
+
+/* ── Policies ── */
+.policy-details{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.policy-details+.policy-details{margin-top:6px}
+.policy-summary{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;cursor:pointer;font-weight:500;font-size:13px;
+  color:var(--text-1);list-style:none;user-select:none;transition:background .12s;
+}
+.policy-summary::-webkit-details-marker{display:none}
+.policy-summary:hover{background:var(--bg-2)}
+.policy-details[open] .policy-summary{background:var(--bg-2);border-bottom:1px solid var(--border)}
+.policy-chevron{font-size:11px;color:var(--text-4);transition:transform .2s}
+.policy-details[open] .policy-chevron{transform:rotate(180deg)}
+.policy-body{padding:18px;font-size:12px;color:var(--text-2);line-height:1.75}
+.policy-body h3{font-size:12px;font-weight:600;color:var(--text-1);margin:14px 0 5px}
+.policy-body h3:first-child{margin-top:0}
+.policy-body p{margin-bottom:9px}
+.policy-body ul{margin:5px 0 9px 16px}
+.policy-body li{margin-bottom:3px}
+
+/* ── FAQ ── */
+.faq-item{border:1px solid var(--border);border-radius:5px;overflow:hidden;background:var(--surface);margin-bottom:4px}
+.faq-q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;font-size:13px;font-weight:500;color:var(--text-1);
+  background:none;border:none;cursor:pointer;text-align:left;gap:8px;transition:background .12s;
+}
+.faq-q:hover{background:var(--bg-2)}
+.faq-q .arr{font-size:10px;color:var(--text-4);transition:transform .18s;flex-shrink:0}
+.faq-item.open .arr{transform:rotate(180deg)}
+.faq-a{display:none;padding:0 14px 12px;font-size:12px;color:var(--text-3);line-height:1.65}
+.faq-item.open .faq-a{display:block}
+
+/* ── Section header ── */
+.section-title{font-size:17px;font-weight:600;color:var(--text-1);letter-spacing:-.025em;margin-bottom:5px}
+.section-sub{font-size:13px;color:var(--text-3);line-height:1.6}
+
+/* ── Benefits ── */
+.benefit-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px;
+}
+.benefit-card:hover{border-color:var(--text-4);transition:border-color .15s}
+.benefit-icon{font-size:22px;margin-bottom:8px}
+.benefit-title{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:5px}
+.benefit-desc{font-size:12px;color:var(--text-3);line-height:1.55}
+
+/* ── Footer ── */
+footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top:auto}
+.footer-inner{padding:28px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:24px}
+.footer-brand p{font-size:12px;color:var(--text-3);margin-top:5px;line-height:1.5}
+.footer-col-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:8px}
+.footer-link{display:block;font-size:12px;color:var(--text-3);text-decoration:none;padding:2px 0;transition:color .1s}
+.footer-link:hover{color:var(--accent)}
+.footer-bottom{border-top:1px solid var(--border-2);padding:14px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:var(--text-4)}
+.pill{font-size:10px;border:1px solid var(--border);border-radius:3px;padding:2px 7px;color:var(--text-4)}
+.pill-accent{border-color:rgba(37,99,235,.3);color:var(--accent);background:var(--accent-lt)}
+
+/* ── Output preview ── */
+#output-preview{
+  padding:14px;font-family:var(--mono);font-size:12px;
+  line-height:1.8;color:var(--text-2);
+  white-space:pre-wrap;word-break:break-word;
+  max-height:340px;overflow-y:auto;
+}
+
+/* ── Misc ── */
+.group-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);padding:8px 0 4px;margin-top:4px}
+
+
+/* ── Language selector ── */
+.lang-selector{display:flex;gap:1px;background:var(--border);border-radius:4px;padding:1px}
+.lang-btn{
+  font-size:11px;font-weight:500;color:var(--text-3);
+  background:none;border:none;cursor:pointer;
+  padding:3px 8px;border-radius:3px;transition:all .12s;
+}
+.lang-btn.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
+.lang-btn:hover:not(.active){color:var(--text-2)}
+
+/* ── Responsive ── */
+@media(max-width:700px){
+  .header-score-wrap{display:none}
+  .sec-banner .banner-text{display:none}
+  .container{padding:0 14px}
+}
+@media(min-width:1040px){
+  #main-grid{grid-template-columns:1fr 260px!important}
+}
+
+/* ── Terms modal v19.1 ── */
+#terms-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+#terms-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;max-width:480px;width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  overflow:hidden;
+}
+#terms-box .tb-header{
+  padding:20px 24px 0;
+  display:flex;align-items:center;gap:10px;
+}
+#terms-box .tb-body{
+  padding:16px 24px;
+  font-size:12px;color:var(--text-3);line-height:1.7;
+  max-height:260px;overflow-y:auto;
+}
+#terms-box .tb-body h3{
+  font-size:13px;font-weight:600;color:var(--text-1);
+  margin:14px 0 5px;
+}
+#terms-box .tb-body h3:first-child{margin-top:0}
+#terms-box .tb-divider{
+  border:none;border-top:1px solid var(--border-2);margin:14px 0;
+}
+#terms-box .tb-footer{
+  padding:14px 24px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:8px;align-items:center;
+}
+#terms-accept{
+  width:100%;padding:10px;border-radius:6px;
+  background:var(--accent);color:#fff;border:none;
+  font-size:13px;font-weight:600;cursor:pointer;
+  transition:background .15s;letter-spacing:.01em;
+}
+#terms-accept:hover{background:var(--accent-2)}
+#terms-footer-note{
+  font-size:11px;color:var(--text-4);text-align:center;
+}
+
+</style>
+</head>
+
+<body class="page-wrap">
+
+<!-- ══════════════════ TERMS MODAL v19.1 ══════════════════ -->
+<div id="terms-overlay" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+  <div id="terms-box">
+    <div class="tb-header">
+      <div style="width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <p style="font-size:15px;font-weight:600;color:var(--text-1);letter-spacing:-.02em" id="terms-title">SanitAI</p>
+        <p style="font-size:11px;color:var(--text-4)">Términos de uso · Terms of Use</p>
+      </div>
+    </div>
+
+    <div class="tb-body">
+      <!-- ESPAÑOL -->
+      <h3>🇪🇸 Términos de uso</h3>
+      <p>Al usar esta herramienta, aceptas las siguientes condiciones:</p>
+      <ul style="margin:6px 0 8px 16px;display:flex;flex-direction:column;gap:3px">
+        <li>Esta herramienta procesa tus datos <strong>100% localmente</strong> en tu navegador. Ningún dato se envía a servidores externos.</li>
+        <li>Se proporciona <strong>"tal cual"</strong>, sin garantías de detección completa. No sustituye una auditoría de seguridad profesional.</li>
+        <li>El usuario es responsable de verificar los resultados antes de compartir el contenido sanitizado.</li>
+        <li>No nos hacemos responsables de datos sensibles no detectados (falsos negativos) ni de contenido eliminado por error (falsos positivos).</li>
+      </ul>
+
+      <hr class="tb-divider"/>
+
+      <!-- ENGLISH -->
+      <h3>🇬🇧 Terms of Use</h3>
+      <p>By using this tool, you agree to the following terms:</p>
+      <ul style="margin:6px 0 8px 16px;display:flex;flex-direction:column;gap:3px">
+        <li>This tool processes your data <strong>100% locally</strong> in your browser. No data is sent to external servers.</li>
+        <li>It is provided <strong>"as is"</strong>, without guarantees of complete detection. It does not replace a professional security audit.</li>
+        <li>The user is responsible for verifying results before sharing sanitized content.</li>
+        <li>We are not liable for undetected sensitive data (false negatives) or incorrectly removed content (false positives).</li>
+      </ul>
+    </div>
+
+    <div class="tb-footer">
+      <button id="terms-accept" onclick="acceptTerms()">
+        ✓ &nbsp;Acepto los términos · I accept the terms
+      </button>
+      <p class="tb-footer-note">Al continuar, confirmas haber leído y aceptado los términos anteriores.<br/>By continuing, you confirm you have read and accepted the above terms.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header class="site-header">
+  <div class="container header-inner">
+    <!-- Logo -->
+    <a class="logo" href="#" aria-label="SanitAI">
+      <div class="logo-icon" style="background:var(--accent)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <span class="logo-name">SanitAI</span>
+      <span class="logo-badge">v20</span>
+    </a>
+
+    <!-- Right side -->
+    <div style="display:flex;align-items:center;gap:12px">
+      <!-- Score strip -->
+      <div style="display:flex;align-items:center;gap:8px" class="header-score-wrap" id="header-score-wrap">
+        <span id="header-detect-count" style="font-size:12px;color:var(--text-4)">—</span>
+        <div class="score-track" style="width:80px">
+          <div class="score-fill" id="score-bar" style="width:100%;background:var(--success)"></div>
+        </div>
+        <span id="score-pct" style="font-size:12px;font-weight:600;color:var(--success);min-width:34px;text-align:right">100%</span>
+      </div>
+      <!-- Language selector -->
+      <div class="lang-selector" role="group" aria-label="Language">
+        <button class="lang-btn active" data-lang="es" onclick="setLanguage('es')">🇪🇸 ES</button>
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">🇬🇧 EN</button>
+      </div>
+      <!-- Theme toggle -->
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Cambiar tema" aria-label="Toggle dark/light mode">🌙</button>
+      <!-- Security banner -->
+      <div class="sec-banner" id="sec-banner">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="sec-icon"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg>
+        <span class="banner-text"><span data-i18n="privacy_msg" class="banner-text">Tus datos se procesan localmente en tu navegador</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section style="background:var(--surface);border-bottom:1px solid var(--border)">
+  <div class="container" style="padding-top:32px;padding-bottom:32px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-4)">SanitAI v20</span>
+      <span style="width:1px;height:10px;background:var(--border);display:inline-block"></span>
+      <span style="font-size:11px;color:var(--accent);font-weight:500" data-i18n="hero_badge">GDPR · PCI DSS · 100% local</span>
+    </div>
+    <h1 style="font-size:clamp(18px,3.5vw,28px);font-weight:600;color:var(--text-1);line-height:1.25;letter-spacing:-.03em;margin-bottom:8px;max-width:520px">
+      <span data-i18n="subtitle">Limpia tus prompts antes de enviarlos a la IA</span>
+    </h1>
+    <p style="font-size:13px;color:var(--text-3);line-height:1.6;max-width:420px">
+      <span data-i18n="subtitle_sub">Detecta emails, contraseñas, IBANs, API keys y 20+ tipos de datos sensibles. Procesado 100% local, sin servidores.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════ MAIN TOOL ══════════════════ -->
+<main>
+<div class="container" style="padding-top:32px;padding-bottom:48px">
+<div style="display:grid;grid-template-columns:1fr;gap:20px" id="main-grid">
+
+  <!-- ── LEFT COLUMN ── -->
+  <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+
+    <!-- Tab + Mode row -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div class="tab-group">
+        <button class="tab-btn active" id="tab-text" onclick="switchTab('text')" data-i18n="tab_text">Texto / Prompt</button>
+        <button class="tab-btn" id="tab-file" onclick="switchTab('file')" data-i18n="tab_file">Archivo</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:12px;color:var(--text-4);font-weight:500" data-i18n="mode_label">Modo:</span>
+        <div class="mode-group">
+          <button class="mode-btn active" id="intensity-basic" onclick="setIntensity('basic')" data-i18n="mode_basic">Básico</button>
+          <button class="mode-btn" id="intensity-paranoid" onclick="setIntensity('paranoid')" data-i18n="mode_paranoid">Paranoico</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text panel -->
+    <div id="panel-text">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label"><span data-i18n="input_label">Tu texto o prompt</span>
+          <button onclick="clearInput()" style="font-size:12px;color:var(--text-4);background:none;border:none;cursor:pointer;transition:color .12s" onmouseover="this.style.color='var(--danger)'" onmouseout="this.style.color='var(--text-4)'" data-i18n="clear_btn">Limpiar ✕</button>
+        </div>
+        <textarea id="input-text" class="input-area" rows="11"
+          data-i18n-ph="input_placeholder" placeholder="Pega aquí tu texto, prompt, código o log…&#10;&#10;  javier@empresa.com  ·  sk-proj-abc123…&#10;  AKIA1234567890EXAMPLE  ·  ES91 2100 0418 4502 0005 1332&#10;  password=s3cr3t!  ·  DNI: 12345678Z&#10;  192.168.1.100  ·  tel: 612 345 678"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- File panel -->
+    <div id="panel-file" class="hidden">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label"<span data-i18n="file_label">Seleccionar archivo</span>
+        </div>
+        <div id="drop-zone" class="drop-zone"
+          onclick="document.getElementById('file-input').click()">
+          <input type="file" id="file-input"
+            accept=".txt,.csv,.log,.json,.py,.js,.ts,.env,.yaml,.yml,.xml,.md,.sh,.toml,.ini,.xlsx,.xls,.docx"
+            style="display:none" onchange="handleFileSelect(event)"/>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-4)" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+            </svg>
+            <div style="text-align:center">
+              <p style="font-size:14px;color:var(--text-2);font-weight:500"><span data-i18n="drop_text">Arrastra un archivo aquí</span></p>
+              <p style="font-size:12px;color:var(--text-4);margin-top:4px"><span data-i18n="drop_sub">o haz clic para seleccionarlo</span></p>
+            </div>
+            <p style="font-size:11px;color:var(--text-4)">.txt .csv .json .xlsx .docx .py .js .env…</p>
+          </div>
+        </div>
+        <div id="fileStatus" style="display:none;padding:8px 16px;font-size:12px;color:var(--text-3);border-top:1px solid var(--border-2)"></div>
+        <div id="file-info" style="display:none;padding:12px 16px;border-top:1px solid var(--border-2)">
+          <p id="file-name" style="font-size:13px;color:var(--text-2);font-weight:500"></p>
+          <p id="file-meta" style="font-size:12px;color:var(--text-4);margin-top:2px"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rules grid -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-label" data-i18n="rules_label">Reglas activas</span>
+        <div style="display:flex;gap:8px">
+          <button onclick="toggleAllRules(true)" class="btn btn-ghost btn-sm" style="font-size:11px" data-i18n="enable_all">Activar todo</button>
+          <button onclick="toggleAllRules(false)" class="btn btn-ghost btn-sm" style="font-size:11px;color:var(--danger)" data-i18n="disable_all">Desactivar</button>
+        </div>
+      </div>
+      <div style="padding:12px 16px">
+        <div id="rules-grid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+      <div id="paranoid-rules-section" style="display:none;padding:0 16px 12px;border-top:1px solid var(--border-2)">
+        <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--warn);padding:10px 0 8px" data-i18n="paranoid_label" data-i18n="paranoid_label">Modo Paranoico</p>
+        <div id="paranoid-rules-grid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+      <button class="btn btn-primary" onclick="runCleaner()" id="btn-clean" data-i18n="sanitize_button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/>
+        </svg>
+        Analizar y sanitizar
+      </button>
+      <button class="btn btn-secondary" onclick="copyOutput()" id="btn-copy" disabled data-i18n="copy_button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar resultado
+      </button>
+      <button class="btn btn-secondary" onclick="downloadOutput()" id="btn-download" data-i18n="download_button" disabled>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar
+      </button>
+      <button class="btn btn-ghost" onclick="resetAll()" data-i18n="reset_button">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.67"/></svg>
+        Limpiar
+      </button>
+      <button class="btn btn-ghost" onclick="loadExample()" title="Cargar datos de prueba" data-i18n="example_button">
+        ⚡ Probar con ejemplo
+      </button>
+      <span id="processing-indicator" style="display:none;align-items:center;gap:6px;font-size:12px;color:var(--accent)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        <span data-i18n="processing">Procesando…</span>
+      </span>
+    </div>
+
+    <!-- Output panel -->
+    <div id="output-panel" style="display:none" class="card fade-in">
+      <div class="card-header" style="flex-wrap:wrap;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--success)"></div>
+          <span style="font-size:13px;font-weight:500;color:var(--text-1)" data-i18n="output_label">Resultado</span>
+        </div>
+        <!-- View tabs -->
+        <div style="display:flex;gap:2px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:3px" id="view-tabs">
+          <button class="view-tab active" onclick="setView('sanitized')" id="vtab-sanitized" data-i18n="tab_sanitized">Sanitizado</button>
+          <button class="view-tab" onclick="setView('original')" id="vtab-original" data-i18n="tab_original">Original</button>
+          <button class="view-tab" onclick="setView('diff')" id="vtab-diff" data-i18n="tab_compare">Comparar</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="risk-badge" class="risk-badge" style="display:none"></span>
+          <span id="output-badge" style="font-size:12px;color:var(--text-4)"></span>
+        </div>
+      </div>
+      <div id="output-preview"></div>
+    </div>
+
+    <!-- Detection log -->
+    <div id="detection-log" style="display:none" class="card fade-in">
+      <div class="card-header">
+        <span style="font-size:13px;font-weight:500;color:var(--text-1)" data-i18n="detected_label">Datos detectados</span>
+        <span id="det-count-badge" style="font-size:12px;color:var(--text-4)"></span>
+      </div>
+      <div id="log-items" style="padding:8px;display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto"></div>
+    </div>
+
+  </div><!-- end LEFT -->
+
+  <!-- ── RIGHT SIDEBAR ── -->
+  <div id="right-sidebar" style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- Session stats card -->
+    <div class="card" style="padding:20px">
+      <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:14px" data-i18n="session_label">Resumen de sesión</p>
+
+      <!-- Shield + protected count -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:40px;height:40px;background:var(--accent-lt);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.75"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span id="shield-count" style="font-size:26px;font-weight:600;color:var(--text-1);line-height:1">0</span>
+            <span style="font-size:12px;color:var(--text-4)" data-i18n="protected_label">datos protegidos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy score -->
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:12px;color:var(--text-3)" data-i18n="score_label">Privacy Score</span>
+          <span id="score-pct-2" style="font-size:13px;font-weight:600;color:var(--success)">100%</span>
+        </div>
+        <div class="score-track" style="height:7px">
+          <div class="score-fill" id="score-bar-2" style="width:100%;background:var(--success)"></div>
+        </div>
+      </div>
+
+      <!-- Mini stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="stat-box">
+          <div class="stat-num" id="s-total">0</div>
+          <div class="stat-lbl" data-i18n="findings_label">hallazgos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="s-scans">0</div>
+          <div class="stat-lbl" data-i18n="scans_label">análisis</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="s-files">0</div>
+          <div class="stat-lbl" data-i18n="files_label">archivos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="s-types">0</div>
+          <div class="stat-lbl" data-i18n="categories_label">categorías</div>
+        </div>
+      </div>
+
+      <!-- Breakdown bars -->
+      <div id="stats-breakdown" style="margin-top:12px;display:flex;flex-direction:column;gap:5px"></div>
+    </div>
+
+    <!-- Coverage card -->
+    <div class="card" style="padding:16px 20px">
+      <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:12px" data-i18n="coverage_label">Cobertura</p>
+      <div>
+        <div class="cover-row"><span data-i18n="cov_email">📧 Email / Teléfono</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_dni">🪪 DNI / NIE</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_iban">🏦 IBAN bancario</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_card">💳 Tarjetas (13–19 d.)</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_api">🔑 API Keys (OpenAI / AWS / GCP)</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_ssh">🔒 SSH / PGP / JWT</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_ip">🌐 IPv4 / Rutas sistema</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_cred">🛂 Credenciales contextuales</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_btc">₿ BTC / ETH wallets</span><span class="cover-check">✓</span></div>
+        <div class="cover-row"><span data-i18n="cov_files">📊 .xlsx · .docx</span><span class="cover-check">✓</span></div>
+        <div class="cover-row" style="color:var(--warn)"><span data-i18n="cov_names">🧠 Nombres propios</span><span class="cover-plus">+ paranoico</span></div>
+        <div class="cover-row" style="color:var(--warn)"><span data-i18n="cov_urls">🔗 URLs con credenciales</span><span class="cover-plus">+ paranoico</span></div>
+      </div>
+    </div>
+
+  </div><!-- end RIGHT -->
+
+</div><!-- end main-grid -->
+</div><!-- end container -->
+</main>
+
+<!-- ══════════════════ BENEFITS SECTION ══════════════════ -->
+<section style="background:var(--bg-2);border-top:1px solid var(--border);padding:48px 0">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:36px">
+      <h2 class="section-title" data-i18n="benefits_title">¿Por qué sanitizar antes de usar IA?</h2>
+      <p class="section-sub" style="max-width:520px;margin:8px auto 0" data-i18n="benefits_sub">Cada prompt enviado a ChatGPT, Claude o Gemini puede contener información que no quieres compartir con servidores externos.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+      <div class="benefit-card">
+        <div class="benefit-icon">🛡️</div>
+        <div class="benefit-title" data-i18n="b1_title">100% en tu navegador</div>
+        <div class="benefit-desc" data-i18n="b1_desc">Ningún dato sale de tu dispositivo. Sin servidores, sin base de datos, sin telemetría.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">⚖️</div>
+        <div class="benefit-title" data-i18n="b2_title">Cumplimiento GDPR</div>
+        <div class="benefit-desc" data-i18n="b2_desc">Evita multas por transferir datos personales sin acuerdo de tratamiento firmado (DPA).</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🔍</div>
+        <div class="benefit-title" data-i18n="b3_title">+20 tipos detectados</div>
+        <div class="benefit-desc" data-i18n="b3_desc">Emails, IBANs, contraseñas, API keys, DNIs, IPs, rutas de sistema, wallets y más.</div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">📁</div>
+        <div class="benefit-title" data-i18n="b4_title">Soporta Excel y Word</div>
+        <div class="benefit-desc" data-i18n="b4_desc">Limpia hojas de cálculo .xlsx y documentos .docx celda a celda, sin perder estructura.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ FAQ ══════════════════ -->
+<section style="padding:56px 0;background:var(--bg)">
+  <div class="container" style="max-width:720px">
+    <div style="margin-bottom:28px">
+      <h2 class="section-title" id="faq" data-i18n="faq_title">Preguntas frecuentes</h2>
+    </div>
+    <div id="faq-list"></div>
+  </div>
+</section>
+
+<!-- ══════════════════ POLICIES ══════════════════ -->
+<section style="padding:40px 0 64px;background:var(--bg)">
+  <div class="container" style="max-width:720px">
+    <h2 class="section-title" style="margin-bottom:20px" data-i18n="legal_title">Legal</h2>
+
+    <details class="policy-details">
+      <summary class="policy-summary">
+        <span>📄 Política de Privacidad</span>
+        <span class="policy-chevron">▾</span>
+      </summary>
+      <div class="policy-body">
+        <p><strong>Última actualización:</strong> Enero 2025</p>
+        <h3>1. Responsable del tratamiento</h3>
+        <p>SanitAI es una herramienta de código abierto que opera íntegramente en el navegador del usuario. No existe entidad jurídica que actúe como responsable del tratamiento de datos personales, ya que la herramienta no recopila, almacena ni transfiere ningún dato.</p>
+        <h3>2. Datos que recogemos</h3>
+        <p>Esta herramienta <strong>no recoge ningún dato personal</strong>. Todo el procesamiento ocurre localmente en tu navegador mediante JavaScript. No utilizamos cookies de seguimiento, ni analytics, ni ningún tipo de telemetría.</p>
+        <h3>3. Datos que introduces</h3>
+        <p>El texto, archivos y cualquier información que introduzcas en la herramienta se procesan exclusivamente en la memoria RAM de tu navegador. En ningún momento se envían a servidores externos. Puedes verificarlo abriendo las DevTools de tu navegador (pestaña Network): no se realizan peticiones HTTP durante el análisis.</p>
+        <h3>4. Almacenamiento local</h3>
+        <p>La herramienta puede usar <code>localStorage</code> del navegador únicamente para recordar tus preferencias de configuración (modo básico/paranoico, reglas activas). Estos datos no contienen información personal y se almacenan solo en tu dispositivo.</p>
+        <h3>5. Servicios de terceros</h3>
+        <ul>
+          <li><strong>Google Fonts</strong>: Se cargan tipografías desde los servidores de Google. Esto puede implicar que Google conozca tu dirección IP al solicitar los recursos. Puedes desactivarlo bloqueando las peticiones a fonts.googleapis.com.</li>
+          <li><strong>SheetJS y Mammoth.js</strong>: Librerías cargadas vía CDN para procesar archivos Excel y Word. El procesamiento ocurre localmente.</li>
+        </ul>
+        <h3>6. Tus derechos</h3>
+        <p>Dado que no tratamos datos personales, no aplican los derechos ARCO. Si tienes dudas sobre el funcionamiento de la herramienta, puedes inspeccionarla directamente ya que el código fuente es público y está disponible en el archivo HTML.</p>
+      </div>
+    </details>
+
+    <details class="policy-details">
+      <summary class="policy-summary">
+        <span>📋 Términos de Servicio</span>
+        <span class="policy-chevron">▾</span>
+      </summary>
+      <div class="policy-body">
+        <p><strong>Última actualización:</strong> Enero 2025</p>
+        <h3>1. Aceptación de los términos</h3>
+        <p>Al utilizar SanitAI aceptas estos Términos de Servicio. Si no estás de acuerdo con algún punto, por favor deja de usar la herramienta.</p>
+        <h3>2. Descripción del servicio</h3>
+        <p>SanitAI es una herramienta gratuita que detecta y elimina datos sensibles de texto y archivos, procesando todo localmente en tu navegador. Se proporciona "tal cual" sin garantías de ningún tipo.</p>
+        <h3>3. Limitación de responsabilidad</h3>
+        <p>Esta herramienta se ofrece como ayuda, no como garantía de cumplimiento normativo. No nos hacemos responsables de:</p>
+        <ul>
+          <li>Datos sensibles no detectados (falsos negativos) por límites del motor de reglas.</li>
+          <li>Datos correctos eliminados por error (falsos positivos).</li>
+          <li>Decisiones tomadas basándose únicamente en el resultado de esta herramienta.</li>
+          <li>Incumplimientos regulatorios como GDPR o PCI DSS derivados de su uso o no uso.</li>
+        </ul>
+        <h3>4. Uso adecuado</h3>
+        <p>Esta herramienta está diseñada para uso legítimo de protección de privacidad. Queda prohibido su uso para eludir controles de seguridad legítimos, acceder a datos de terceros sin autorización, o cualquier actividad contraria a la legislación aplicable.</p>
+        <h3>5. Modificaciones</h3>
+        <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado de la herramienta tras la publicación de cambios implica la aceptación de los nuevos términos.</p>
+        <h3>6. Ley aplicable</h3>
+        <p>Estos términos se rigen por la legislación española y de la Unión Europea. Cualquier disputa se someterá a los tribunales competentes de España.</p>
+      </div>
+    </details>
+
+    <details class="policy-details">
+      <summary class="policy-summary">
+        <span>🍪 Política de Cookies</span>
+        <span class="policy-chevron">▾</span>
+      </summary>
+      <div class="policy-body">
+        <p><strong>Última actualización:</strong> Enero 2025</p>
+        <h3>¿Utilizamos cookies?</h3>
+        <p>SanitAI <strong>no utiliza cookies de seguimiento, analíticas ni publicitarias</strong>. No rastreamos tu comportamiento ni compartimos información con terceros con fines publicitarios.</p>
+        <h3>Almacenamiento local del navegador</h3>
+        <p>Podemos utilizar <code>localStorage</code> del navegador (técnicamente distinto de las cookies) exclusivamente para guardar tus preferencias de uso de la herramienta, como el modo de detección seleccionado. Estos datos:</p>
+        <ul>
+          <li>No contienen información personal.</li>
+          <li>Nunca se envían a ningún servidor.</li>
+          <li>Puedes eliminarlos en cualquier momento limpiando los datos del sitio en tu navegador.</li>
+        </ul>
+        <h3>Recursos externos</h3>
+        <p>Al cargar la página, se realizan peticiones a servicios de CDN (Google Fonts, jsDelivr) para cargar tipografías y librerías. Estos servicios pueden registrar tu dirección IP según sus propias políticas de privacidad.</p>
+        <h3>Tu control</h3>
+        <p>Puedes usar esta herramienta descargando el archivo HTML y abriéndolo localmente en tu navegador, evitando cualquier petición externa. Así tendrás garantía total de privacidad.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- ══════════════════ FOOTER ══════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div class="logo-icon" style="width:28px;height:28px;border-radius:7px;background:var(--accent)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f1729" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <span style="font-weight:600;font-size:14px;color:var(--text-1)">SanitAI</span>
+        </div>
+        <p data-i18n="footer_tagline">Herramienta gratuita de privacidad.<br/>100% local · sin telemetría.</p>
+      </div>
+      <div>
+        <p class="footer-col-title" data-i18n="footer_legal">Legal</p>
+        <a href="#" onclick="document.querySelector('details.policy-details').open=true;document.querySelector('details.policy-details').scrollIntoView({behavior:'smooth'});return false" class="footer-link" data-i18n="footer_privacy">Política de Privacidad</a>
+        <a href="#" onclick="document.querySelectorAll('details.policy-details')[1].open=true;document.querySelectorAll('details.policy-details')[1].scrollIntoView({behavior:'smooth'});return false" class="footer-link" data-i18n="footer_terms">Términos de Servicio</a>
+        <a href="#" onclick="document.querySelectorAll('details.policy-details')[2].open=true;document.querySelectorAll('details.policy-details')[2].scrollIntoView({behavior:'smooth'});return false" class="footer-link" data-i18n="footer_cookies">Política de Cookies</a>
+      </div>
+      <div>
+        <p class="footer-col-title" data-i18n="footer_tool">Herramienta</p>
+        <a href="#faq" class="footer-link" data-i18n="footer_faq_link">Preguntas frecuentes</a>
+        <a href="#" onclick="loadExample();window.scrollTo({top:0,behavior:'smooth'});return false" class="footer-link">Probar ejemplo</a>
+      </div>
+      <div>
+        <p class="footer-col-title" data-i18n="footer_tech">Tecnología</p>
+        <a href="https://sheetjs.com" target="_blank" rel="noopener" class="footer-link">SheetJS (Excel)</a>
+        <a href="https://github.com/mwilliamson/mammoth.js" target="_blank" rel="noopener" class="footer-link">Mammoth.js (Word)</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer_copy">© 2025 SanitAI · Ningún dato sale de tu dispositivo.</p>
+      <div style="display:flex;gap:6px">
+        <span class="pill pill-accent">GDPR Ready</span>
+        <span class="pill">Zero Telemetry</span>
+        <span class="pill">PCI DSS Aware</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════ SCHEMA FAQ ══════════════════ -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"¿Los datos se envían a algún servidor?","acceptedAnswer":{"@type":"Answer","text":"No. Todo el procesamiento ocurre en tu navegador mediante JavaScript nativo. Puedes comprobarlo en DevTools → Network: no hay peticiones HTTP durante el análisis."}},
+  {"@type":"Question","name":"¿Puede limpiar archivos Excel con datos personales?","acceptedAnswer":{"@type":"Answer","text":"Sí. La herramienta usa SheetJS en el cliente para recorrer todas las celdas, aplica las reglas de detección y genera un .xlsx limpio descargable."}},
+  {"@type":"Question","name":"¿Qué diferencia hay entre modo Básico y Paranoico?","acceptedAnswer":{"@type":"Answer","text":"El modo Básico cubre PII estándar: email, teléfono, DNI/NIE, IBAN, tarjetas, API keys, IPs y credenciales contextuales. El modo Paranoico añade nombres propios, MACs, hashes y URLs con credenciales."}},
+  {"@type":"Question","name":"¿Viola GDPR usar ChatGPT con datos de empleados?","acceptedAnswer":{"@type":"Answer","text":"Potencialmente sí. El Artículo 28 GDPR exige DPA firmado con cada subprocesador. Enviar datos personales sin ese acuerdo puede suponer multas de hasta el 4% del volumen global o 20M€."}}
+]}
+</script>
+
+<!-- Engine -->
+<script>
+
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// § 1 — SHADOW NORMALIZATION ENGINE
+// ═══════════════════════════════════════════════════════════════
+// Construye una copia "limpia" del texto original eliminando técnicas
+// Devuelve el shadow text + un mapa de posiciones shadow→original.
+//
+//   [dot] / (dot) / &#46; → .  (punto ofuscado)
+//   Secuencias `\d[\s,]\d` en contexto numérico → colapso de separadores
+//   (IPs con comas: 192,168,1,1 → detectadas por ip_loose rule)
+// ───────────────────────────────────────────────────────────────
+function buildShadow(original) {
+  const shadow = [];
+  const toOrig = [];  // toOrig[shadowIndex] = originalIndex
+  let i = 0;
+
+  // Substitution table: [matchStr(lowercase), outputChar]
+  const SUBS = [
+    ['[at]',   '@'],
+    ['(at)',   '@'],
+    ['&#64;',  '@'],
+    [' at ',   '@'],   // "user at gmail" — solo entre palabras, no al inicio/fin
+    [' arroba ', '@'], // v6.1 — lenguaje natural español: "usuario arroba gmail"
+    ['[dot]',  '.'],
+    ['(dot)',  '.'],
+    ['&#46;',  '.'],
+    [' dot ',  '.'],
+    [' punto ', '.'], // v6.1 — lenguaje natural español: "gmail punto com"
+  ];
+
+  while (i < original.length) {
+    let matched = false;
+    for (const [pat, rep] of SUBS) {
+      const sl = original.slice(i, i + pat.length).toLowerCase();
+      if (sl === pat) {
+        // Map each char of the replacement to the start of the pattern in original
+        for (let c = 0; c < rep.length; c++) {
+          shadow.push(rep[c]);
+          toOrig.push(i);
+        }
+        i += pat.length;
+        matched = true;
+        break;
+      }
+    }
+    if (!matched) {
+      shadow.push(original[i]);
+      toOrig.push(i);
+      i++;
+    }
+  }
+
+  return { shadow: shadow.join(''), toOrig };
+}
+
+// Post-normalización del shadow: colapsa espacios alrededor de @ y . para que
+// los emails ofuscados como "user @ gmail . com" sean matcheables por el regex estándar.
+function collapseShadow(s) {
+  return s
+    .replace(/\s+@\s+/g, '@')   // "user @ gmail" → "user@gmail"
+    .replace(/(\w)\s+\.\s+(\w)/g, '$1.$2'); // "gmail . com" → "gmail.com"
+}
+
+// ═══════════════════════════════════════════════════════════════
+// § 2 — SHANNON ENTROPY (para detección de high-entropy strings)
+// ═══════════════════════════════════════════════════════════════
+// Una API key aleatoria de 32 chars tiene ~4.5 bits/char.
+// Una palabra en inglés normal tiene ~2.5-3.0 bits/char.
+// Umbral conservador: ≥3.8 bits/char (evita false positives en texto normal).
+// ───────────────────────────────────────────────────────────────
+function shannonEntropy(str) {
+  if (!str || str.length < 2) return 0;
+  const freq = {};
+  for (const c of str) freq[c] = (freq[c] || 0) + 1;
+  const len = str.length;
+  return -Object.values(freq).reduce((acc, f) => {
+    const p = f / len;
+    return acc + p * Math.log2(p);
+  }, 0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// § 3 — REGLAS DEL MOTOR v6
+// ═══════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────
+// BASIC RULES — corren siempre
+// ─────────────────────────────────────────────────────
+const BASIC_RULES = [
+
+  // ── EMAIL — patrón RFC 5321 (evita fragmentos de URL con @) ──
+  // SHADOW-AWARE: los emails ofuscados (user[at]domain[dot]com) se
+  // detectan via shadow pass en sanitize(). Esta regla captura los normales.
+  {
+    id:'email', label:'Email', group:'PII', sev:'critical',
+    pattern:() => /(?<![\/\w])[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?!\.[a-zA-Z]{2,})/g,
+    replacement:'[EMAIL]',
+    shadowAware: true,  // también se aplica sobre shadow text (collapsed)
+  },
+
+  // ── EMAIL OFUSCADO — regla directa sobre texto original ──────────────────
+  // Cubre: [at]/(at)/&#64;/" at "/" arroba " y [dot]/(dot)/&#46;/" dot "/" punto "
+  // v6.1: añadidos "arroba" y "punto" para lenguaje natural español.
+  {
+    id:'email_obf', label:'Email (ofuscado)', group:'PII', sev:'critical',
+    pattern:() => /[a-zA-Z0-9._%+\-]+\s*(?:\[at\]|\(at\)|&#64;|(?<!\w)at(?!\w)|arroba)\s*[a-zA-Z0-9.\-]+\s*(?:\[dot\]|\(dot\)|&#46;|(?<!\w)dot(?!\w)|punto)\s*[a-zA-Z]{2,}/gi,
+    replacement:'[EMAIL]',
+  },
+
+  // ── TELÉFONO ES — móvil 6xx/7xx + fijo 8xx/9xx con separadores variables ──
+  // (postFilter rechaza si hay ≥3 puntos consecutivos entre dígitos = IP).
+  {
+    id:'phone_es', label:'Teléfono ES', group:'PII', sev:'high',
+    pattern:() => /(?:(?:\+|00)34[\s.\-]?)?([6789](\d[\s.\-]?){8})\b/g,
+    replacement:(m) => {
+      if ((m.match(/\./g) || []).length >= 3) return m;  // rechazar IPs
+      const d = m.replace(/\D/g,'');
+      return (d.length===9||d.length===11||d.length===12) ? '[TELEFONO]' : m;
+    },
+  },
+
+  // ── TELÉFONO CONTEXTUAL — tras label explícito ──
+  {
+    id:'phone_ctx', label:'Teléfono (contexto)', group:'PII', sev:'high',
+    pattern:() => /(?:tel(?:é?fono)?|phone|móvil|mobile|fax)\s*[:\-]?\s*(\+?[\d][\d\s.\-]{7,15})/gi,
+    replacement:(m,p1) => m.replace(p1,'[TELEFONO]'),
+    _enabled: false,  // off por defecto para evitar double-count
+  },
+
+  // ── DNI / NIE ──
+  {
+    id:'dni_nie', label:'DNI / NIE', group:'Documentos', sev:'critical',
+    pattern:() => /\b([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])\b/gi,
+    replacement:'[DNI_NIE]',
+  },
+
+  // ── IBAN ES — soporta espaciado estándar, guiones y formatos mixtos (v6.1) ──
+  // postFilter valida exactamente 22 dígitos (2 control + 20 cuenta).
+  {
+    id:'iban', label:'IBAN (ES)', group:'Finanzas', sev:'critical',
+    pattern:() => /\bES\d{2}[\d\s\-]{20,34}\b/g,
+    postFilter:(m) => m.replace(/[^0-9]/g,'').length === 22 ? m : null,
+    replacement:'[IBAN]',
+  },
+
+  // ── IBAN SIN PREFIJO — NUEVO EN v6 ──────────────────────────────────────
+  // Detecta secuencias de 20-24 dígitos en contexto financiero explícito.
+  // Permite texto extra entre keyword y número: "cuenta (sin prefijo): 2100..."
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'iban_raw', label:'IBAN sin prefijo', group:'Finanzas', sev:'critical',
+    pattern:() => /(?:iban|n[úu]mero de cuenta|cuenta bancaria|cuenta|no\.?\s*cuenta)[^:\n]{0,40}:?\s*((?:\d{4}[\s\-]?){4,6}\d{0,4})/gi,
+    replacement:(m,p1) => {
+      const d = p1.replace(/\D/g,'');
+      if (d.length < 18 || d.length > 28) return m;
+      return m.replace(p1, '[IBAN]');
+    },
+  },
+
+  // ── IPv4 ESTÁNDAR — dígitos separados por puntos ──
+  {
+    id:'ipv4', label:'IPv4', group:'Infraestructura', sev:'medium',
+    pattern:() => /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,
+    replacement:'[IP]',
+  },
+
+  // ── IPv4 CON COMAS O ESPACIOS — NUEVO EN v6 ────────────────────────────
+  // El postFilter rechaza si algún octeto > 255 (evita false positives).
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'ip_loose', label:'IPv4 (comas/espacios)', group:'Infraestructura', sev:'medium',
+    pattern:() => /\b(\d{1,3})[,\s](\d{1,3})[,\s](\d{1,3})[,\s](\d{1,3})\b/g,
+    postFilter:(m) => {
+      const octets = m.split(/[,\s]+/).map(Number);
+      return octets.every(o => o <= 255) ? m : null;
+    },
+    replacement:'[IP]',
+  },
+
+  // ── CREDIT CARD 13-19 dígitos con separadores flexibles ──
+  {
+    id:'credit_card', label:'Tarjeta crédito', group:'Finanzas', sev:'critical',
+    pattern:() => /\b(?:\d[ \t\-]*?){13,19}\b/g,
+    postFilter:(m) => {
+      const d = m.replace(/\D/g,'');
+      return (d.length>=13 && d.length<=19) ? m : null;
+    },
+    replacement:'[TARJETA]',
+  },
+
+  // ── OpenAI API Key ──
+  {
+    id:'openai_key', label:'OpenAI Key', group:'API Keys', sev:'critical',
+    pattern:() => /(sk-(?:proj-)?[a-zA-Z0-9]{32,})/g,
+    replacement:'[OPENAI_KEY]',
+  },
+
+  // ── AWS Access Key ID ──────────────────────────────────────────────────
+  // prueba/staging que usan longitudes no estándar. La regla high_entropy
+  // (en PARANOID_RULES) detecta el caso extremo "sin prefijo AKIA".
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'aws_key', label:'AWS Key', group:'API Keys', sev:'critical',
+    pattern:() => /\bAKIA[0-9A-Z]{16,20}\b/g,
+    replacement:'[AWS_KEY]',
+  },
+
+  // ── GCP / Google API Key ──
+  {
+    id:'gcp_key', label:'GCP Key', group:'API Keys', sev:'critical',
+    pattern:() => /\bAIza[0-9A-Za-z\-_]{35}\b/g,
+    replacement:'[GCP_KEY]',
+  },
+
+  // ── GitHub Personal Access Token ──
+  {
+    id:'github_token', label:'GitHub Token', group:'API Keys', sev:'critical',
+    pattern:() => /\bghp_[a-zA-Z0-9]{36}\b/g,
+    replacement:'[GITHUB_TOKEN]',
+  },
+
+  // ── SSH Private Key block ──
+  {
+    id:'ssh_block', label:'SSH Private Key', group:'API Keys', sev:'critical',
+    pattern:() => /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----/gi,
+    replacement:'[SSH_PRIVATE_KEY]',
+  },
+
+  // ── PGP Private Key block ──
+  {
+    id:'pgp_block', label:'PGP Key', group:'API Keys', sev:'critical',
+    pattern:() => /-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]*?-----END PGP PRIVATE KEY BLOCK-----/gi,
+    replacement:'[PGP_PRIVATE_KEY]',
+  },
+
+  // ── JWT Token ──
+  {
+    id:'jwt', label:'JWT Token', group:'API Keys', sev:'critical',
+    pattern:() => /\beyJ[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\b/g,
+    replacement:'[JWT]',
+  },
+
+  // ── CREDENCIALES CONTEXTUALES — MEJORADO EN v6 ──────────────────────────
+  //   1. \w* tras keyword: permite sufijos "_acceso", "_id", "_secret" etc.
+  //      (token_acceso, session_id, api-key, db_password → todos detectados)
+  //   2. Multilinea hasta 50 chars: el valor puede estar en la línea siguiente.
+  //      Ejemplo: "password:\n  SuperSecret" → ahora detectado.
+  //   3. (?!\[): evita re-detectar tokens ya censurados como [OPENAI_KEY].
+  //   4. Lookahead al final (?=...) evita consumir caracteres de cierre
+  //      como ), ", ', que pertenecen a la estructura del código/texto.
+  // ────────────────────────────────────────────────────────────────────────
+  // ── CREDENCIALES CONTEXTUALES v6.2 — FIXED in v7.1 ────────────────────────
+  // BUG anterior: ['"]?…[^\s"']+ excluía comillas del valor capturado →
+  //   db_password: "SuperSecret!" producía [CREDENTIAL] "SuperSecret!" (fuga).
+  //
+  // SOLUCIÓN: tres ramas alternativas para el valor:
+  //   1. "valor"  → comillas dobles (cualquier char excepto ")
+  //   2. 'valor'  → comillas simples (cualquier char excepto ')
+  //   3. valor    → sin comillas (sin espacios ni delimitadores)
+  // El replacement devuelve '[CREDENTIAL]' COMPLETO (keyword + separador + valor)
+  // sin llamar a m.replace() parcial que dejaba el valor visible.
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    id:'ctx_creds', label:'Credenciales (contexto)', group:'API Keys', sev:'high',
+    pattern:() => /(?:api[_\-]?key|access[_\-]?token|auth[_\-]?token|password|passwd|contraseña|session_id|secret|clave|pass|token|auth|key)\w*\s*['"]?\s*[:=]\s*(?:"[^"\n]{1,200}"|'[^'\n]{1,200}'|(?!\[)[^\s"'`(),;\n\r]{4,200})/gi,
+    replacement: '[CREDENTIAL]',
+  },
+
+  // ── Rutas Unix/Mac con username ──
+  {
+    id:'path_unix', label:'Ruta Unix/Mac', group:'Sistema', sev:'medium',
+    pattern:() => /\/(?:home|Users|root)\/([^/\s"'`,;\n,]{1,60})(?:\/[^\s"'`,;\n]*)?/g,
+    replacement:'/home/[USER]',
+  },
+
+  // ── Rutas Windows con username ──
+  {
+    id:'path_win', label:'Ruta Windows', group:'Sistema', sev:'medium',
+    pattern:() => /[A-Z]:\\(?:Users|Documents and Settings)\\([^\\"\n,]{1,60})(?:\\[^\n"]*)?/gi,
+    replacement:'C:\\Users\\[USER]',
+  },
+
+  // ── Rutas sistema genéricas ──
+  {
+    id:'path_sys', label:'Ruta sistema', group:'Sistema', sev:'low',
+    pattern:() => /\/(?:etc|var|usr|opt|srv|tmp|proc|dev)\/[^\s"'`,;\n,]{3,}/g,
+    replacement:'[SYSPATH]',
+    _enabled: false,
+  },
+
+  // ── BTC wallets ──
+  {
+    id:'btc', label:'BTC Wallet', group:'Finanzas', sev:'high',
+    pattern:() => /\b(?:bc1[a-zA-HJ-NP-Z0-9]{25,39}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b/g,
+    replacement:'[BTC_WALLET]',
+  },
+
+  // ── ETH wallets ──
+  {
+    id:'eth', label:'ETH Wallet', group:'Finanzas', sev:'high',
+    pattern:() => /\b0x[a-fA-F0-9]{40}\b/g,
+    replacement:'[ETH_WALLET]',
+  },
+];
+
+// ─────────────────────────────────────────────────────
+// PARANOID RULES — solo en modo Paranoico
+// ─────────────────────────────────────────────────────
+const PARANOID_RULES = [
+
+  // ── NOMBRES PROPIOS — REESCRITO EN v6 con Stop Words ─────────────────────
+  // PROBLEMA (v4/v5): palabras como "Para", "Aquí", "Nota", "El", "La"
+  // se marcaban como nombres propios generando falsos positivos masivos.
+  //
+  // SOLUCIÓN v6 — tres capas de protección:
+  //   1. Stop Words: lista de palabras comunes españolas/inglesas que NUNCA
+  //      se censuran aunque tengan mayúscula inicial.
+  //   2. Contexto: no se censura si el ctx previo es inicio de texto/línea
+  //      o si sigue a . ! ? ¡ ¿ : (fin/inicio de oración).
+  //   3. Longitud mínima: ≥3 chars para evitar iniciales y abreviaturas.
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'proper_nouns', label:'Nombres propios', group:'Paranoico', sev:'low',
+    // Stop Words: palabras con mayúscula que NO son nombres propios.
+    // Incluye pronombres, preposiciones, conjunciones, saludos comunes.
+    _stopWords: new Set([
+      // ES
+      'El','La','Los','Las','Un','Una','Unos','Unas',
+      'Para','Por','De','Del','Con','Sin','En','Al','A',
+      'Que','Y','O','Pero','Si','No','Ni','Más','Muy',
+      'Este','Esta','Estos','Estas','Ese','Esa','Esos','Esas',
+      'Aquel','Aquella','Aquellos','Aquellas',
+      'Mi','Tu','Su','Nuestro','Nuestra',
+      'Me','Te','Se','Le','Les','Lo','Los',
+      'Nota','Saludos','Gracias','Hola','Estimado','Estimada',
+      'Atentamente','Cordialmente','Adjunto','Adjunta',
+      'Aquí','Allí','Acá','Ahora','Ayer','Mañana','Hoy',
+      'Todo','Toda','Todos','Todas','Mucho','Mucha',
+      'Poco','Poca','Bien','Mal','Así',
+      'Cuando','Donde','Como','Porque','Aunque',
+      'Primero','Segundo','Tercero','Primero',
+      // EN
+      'Hello','Dear','From','To','The','A','An',
+      'This','That','These','Those','With','Without',
+      'Please','Thanks','Regards','Best','Note',
+      'Here','There','Now','Today','Tomorrow','Yesterday',
+      'All','Some','Many','Much','Very','Well',
+    ]),
+    pattern:() => /((?:[.!?¡¿:]\s+)|(?:^|[\r\n]+)\s*|(?:[ \t]+))([A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]{2,}(?:[ \t]+[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]{2,}){0,3})/gm,
+    replacement: null,  // función dinámica — se asigna en initRules()
+  },
+
+  // ── MAC Address ──
+  {
+    id:'mac', label:'MAC Address', group:'Paranoico', sev:'medium',
+    pattern:() => /\b(?:[0-9a-fA-F]{2}[:\-]){5}[0-9a-fA-F]{2}\b/g,
+    replacement:'[MAC]',
+  },
+
+  // ── URLs con credenciales embebidas ──
+  {
+    id:'url_creds', label:'URL con credenciales', group:'Paranoico', sev:'critical',
+    pattern:() => /(?:https?|ftp):\/\/[^:@\s/]+:[^@\s/]+@[^\s"']*/gi,
+    replacement:'[URL_CREDENCIALES]',
+  },
+
+  // ── Hashes (MD5 / SHA1 / SHA256) ──
+  {
+    id:'hash', label:'Hash (MD5/SHA)', group:'Paranoico', sev:'low',
+    pattern:() => /\b(?:[a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{64})\b/gi,
+    replacement:'[HASH]',
+  },
+
+  // ── Docker digest ──
+  {
+    id:'docker_sha', label:'Docker digest', group:'Paranoico', sev:'low',
+    pattern:() => /\bsha256:[a-f0-9]{64}\b/gi,
+    replacement:'[DOCKER_DIGEST]',
+  },
+
+  // ── Variables de fichero .env ──
+  {
+    id:'env_var', label:'Variable .env', group:'Paranoico', sev:'high',
+    pattern:() => /^([A-Z_][A-Z0-9_]{2,50})\s*=\s*(.{1,200})$/gm,
+    replacement:(m,k,v) => `${k}=[VALOR_REDACTADO]`,
+  },
+
+  // ── Social handles ──
+  {
+    id:'social', label:'@handle', group:'Paranoico', sev:'low',
+    pattern:() => /(?<![a-zA-Z0-9])@[a-zA-Z][a-zA-Z0-9_]{2,29}\b/g,
+    replacement:'@[HANDLE]',
+    _enabled: false,
+  },
+
+  // ── HIGH ENTROPY STRINGS — NUEVO EN v6 ───────────────────────────────────
+  // prefijo reconocible (ej: un token Bearer de 40 chars aleatorios).
+  // Esta regla detecta cualquier string alfanumérico de ≥20 chars que
+  // tenga entropía Shannon >3.8 bits/char (umbral calibrado para minimizar
+  // false positives en texto normal, URLs y base64 corto).
+  //
+  // La regla NO corre sobre shadow — opera directamente sobre el original
+  // DESPUÉS de que las otras reglas hayan ya censurado keys conocidas,
+  // evitando así marcar "[OPENAI_KEY]" como high-entropy.
+  //
+  // Cobertura: Bearer tokens, Stripe keys (sk_live_...), tokens genéricos,
+  // contraseñas de 20+ chars, secrets de CI/CD sin nombre reconocible.
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'high_entropy', label:'Token alta entropía', group:'Paranoico', sev:'high',
+    pattern:() => /\b[a-zA-Z0-9_\-]{20,}\b/g,
+    postFilter:(m) => {
+      // Rechazar si ya es un token [PLACEHOLDER]
+      if (/^\[/.test(m)) return null;
+      // Rechazar palabras comunes (todo minúsculas sin dígitos = texto normal)
+      if (/^[a-z]+$/.test(m) || /^[A-Z][a-z]+$/.test(m)) return null;
+      // Rechazar si parece una URL o dominio
+      if (/\.(com|es|org|net|io|dev)/.test(m)) return null;
+      // Entropía: ≥3.8 bits/char = claramente aleatorio
+      return shannonEntropy(m) >= 3.8 ? m : null;
+    },
+    replacement:'[TOKEN_ALTA_ENTROPIA]',
+  },
+
+  // ── IBAN sin prefijo (modo Paranoico) — extiende la regla básica ──────────
+  // En Básico: solo detecta si hay keyword "IBAN" o "cuenta" explícito.
+  // En Paranoico: detecta cualquier secuencia de 20-24 dígitos (con o sin
+  // espacios en grupos de 4) que no sea ya un número de tarjeta.
+  // El postFilter valida longitud exacta 20, 22 ó 24 dígitos.
+  // ────────────────────────────────────────────────────────────────────────
+  {
+    id:'iban_paranoid', label:'Secuencia bancaria', group:'Paranoico', sev:'high',
+    pattern:() => /\b(?:\d{4}[\s\-]?){5,6}\b/g,
+    postFilter:(m) => {
+      const d = m.replace(/\D/g,'');
+      return (d.length === 20 || d.length === 22 || d.length === 24) ? m : null;
+    },
+    replacement:'[IBAN]',
+  },
+];
+
+
+// ═══════════════════════════════════════════════════════════════
+// § INTERNATIONAL RULES — añadidas en v11 (NO modifican reglas existentes)
+// ═══════════════════════════════════════════════════════════════
+
+// ─── 5.1 US Phone  +1 (555) 123-4567 / +15551234567
+BASIC_RULES.push({
+  id:'phone_us', label:'Phone (US)', group:'PII', sev:'high',
+  pattern:() => /\+1\s?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}\b/g,
+  replacement:'[TELEFONO]',
+});
+
+// ─── 5.2 UK Phone  +44 7911 123456  /  07911 123456
+BASIC_RULES.push({
+  id:'phone_uk', label:'Phone (UK)', group:'PII', sev:'high',
+  pattern:() => /(?:\+44\s?\d{4}\s?\d{6}|0\d{4}\s?\d{6})\b/g,
+  replacement:'[TELEFONO]',
+});
+
+// ─── 5.3 Generic international  +52 55 1234 5678  /  +55 11 98765-4321
+BASIC_RULES.push({
+  id:'phone_intl', label:'Phone (Intl)', group:'PII', sev:'high',
+  pattern:() => /\+\d{2,3}[\s.\-]?\d{2,4}[\s.\-]?\d{3,4}[\s.\-]?\d{3,4}\b/g,
+  replacement:(m) => {
+    // Avoid overlapping with ES rule (+34) — skip if already handled
+    if (/^\+34/.test(m)) return m;
+    const d = m.replace(/\D/g,'');
+    return (d.length >= 10 && d.length <= 15) ? '[TELEFONO]' : m;
+  },
+});
+
+// ─── 5.4 International IBAN (non-ES)
+// Format: CC99 + 10–30 alphanumeric — postFilter excludes ES (already handled)
+BASIC_RULES.push({
+  id:'iban_intl', label:'IBAN (Intl)', group:'Finanzas', sev:'critical',
+  pattern:() => /\b([A-Z]{2})\d{2}[A-Z0-9 ]{10,30}\b/g,
+  postFilter:(m) => {
+    if (/^ES/.test(m)) return null;          // ES handled by iban rule
+    const digits = m.replace(/[^0-9]/g,'');
+    return digits.length >= 10 ? m : null;
+  },
+  replacement:'[IBAN]',
+});
+
+// ─── 5.5 IPv6  2001:0db8:85a3:0000:0000:8a2e:0370:7334
+BASIC_RULES.push({
+  id:'ipv6', label:'IPv6', group:'Infraestructura', sev:'medium',
+  pattern:() => /\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b/g,
+  replacement:'[IP]',
+});
+
+// ─── 5.6 English credential keywords (extends ctx_creds coverage via new rule)
+// Separate rule: bearer tokens, authorization headers, passcode
+BASIC_RULES.push({
+  id:'ctx_creds_en', label:'Credentials (EN)', group:'API Keys', sev:'high',
+  pattern:() => /(?:\w+_)?(?:passcode|passphrase|access_token|refresh_token|client_secret|private_key|api_?key|apikey|bearer|authorization)(?:_\w+)*\s*['"]?\s*[:=]\s*(?:"[^"\n]*"|'[^'\n]*'|(?!\[)[^\s"'\n,;)]{4,})/gi,
+  replacement:'[CREDENTIAL]',
+});
+
+// ═══════════════════════════════════════════════════════════════
+// § 4 — INICIALIZACIÓN DE REGLAS
+// ═══════════════════════════════════════════════════════════════
+function initRules() {
+  // Asignar la función de reemplazo de proper_nouns (necesita referencia a _stopWords)
+  const pnRule = PARANOID_RULES.find(r => r.id === 'proper_nouns');
+  if (pnRule) {
+    const sw = pnRule._stopWords;
+    pnRule.replacement = (match, ctx, name) => {
+      // Condición 1: ¿es inicio de texto, línea, o tras puntuación?
+      const isSentenceStart = /[.!?¡¿:]/.test(ctx) || ctx === '' || /[\r\n]/.test(ctx);
+      if (isSentenceStart) return match;
+      // Condición 2: ¿está en la Stop Words list?
+      const firstWord = name.split(/\s+/)[0];
+      if (sw.has(firstWord)) return match;
+      return ctx + '[NOMBRE]';
+    };
+  }
+
+  // Flags de activación por defecto
+  const defaultOff = new Set(['phone_ctx', 'path_sys', 'social']);
+  [...BASIC_RULES, ...PARANOID_RULES].forEach(r => {
+    if (r._enabled === false) return;  // explícitamente off
+    r._enabled = !defaultOff.has(r.id);
+  });
+}
+
+initRules();
+
+// ═══════════════════════════════════════════════════════════════
+// § 5 — APP STATE
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  intensity:  'basic',
+  fileType:   'text',
+  fileName:   'cleaned_output',
+  fileBuffer: null,
+  cleanedText:  '',
+  cleanedXlsx:  null,
+  session: {
+    scans: 0, total: 0, files: 0,
+    byCategory: {}, uniqueTypes: new Set(),
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// § 6 — MOTOR DE DOBLE PASADA (CORE)
+// ═══════════════════════════════════════════════════════════════
+//
+// FLUJO:
+//   1. buildShadow(text) → { shadow, toOrig }
+//   2. Para cada regla con shadowAware:true → detectar en shadow,
+//      mapear posiciones a original via toOrig[], recopilar spans.
+//   3. Para cada regla (sobre texto progresivamente sanitizado):
+//      → detectar en texto ya parcialmente limpio (evita re-detección
+//        de tokens ya marcados).
+//   4. Aplicar todos los spans recopilados de mayor a menor índice
+//      (evita shift de posiciones al sustituir).
+//
+// NOTA sobre ctx_creds replacement:
+//   La función reemplaza solo el VALOR, preservando el keyword
+//   (password=, api-key:, etc.) para no destruir la legibilidad del log.
+// ───────────────────────────────────────────────────────────────
+function sanitize(text) {
+  // ── v6.1 — Pre-normalización Unicode ─────────────────────────────────────
+  // Normaliza caracteres Unicode equivalentes (ej: ＠ fullwidth → @, ａ → a)
+  // y elimina zero-width chars invisibles que rompen patrones regex.
+  // Cubre copias desde WhatsApp/Word/PDFs con smart quotes u homoglifos simples.
+  text = text
+    .normalize('NFKC')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')   // zero-width chars
+    .replace(/[\u2018\u2019]/g, "'")          // v6.1: smart single quotes → '
+    .replace(/[\u201C\u201D]/g, '"');         // v6.1: smart double quotes → "
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // ── Paso 1: Shadow pass — DETECCIÓN PURA (no mapeo de posiciones) ──────────
+  // El motor de posiciones shadow→original era frágil tras el colapso de
+  // espacios (el collapse cambia longitudes, desalineando toOrig[]).
+  // Solución: la shadow pass solo detecta SI hay emails ofuscados;
+  // la SUSTITUCIÓN la realiza email_obf sobre el texto original directamente.
+  const { shadow: rawShadow } = buildShadow(text);
+  const shadow = collapseShadow(rawShadow);
+  let shadowEmailCount = 0;
+  {
+    const emailRe = /(?<![\/\w])[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g;
+    const shadowMatches = [...shadow.matchAll(emailRe)].length;
+    const normalMatches = [...text.matchAll(/(?<![\/\w])[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g)].length;
+    shadowEmailCount = Math.max(0, shadowMatches - normalMatches);
+  }
+
+  let out = text;
+  const detections = [];
+
+  // Reportar emails ofuscados detectados por shadow (sustituidos por email_obf rule)
+  if (shadowEmailCount > 0) {
+    detections.push({
+      id:'email_shadow', label:'Email (bypass detectado)', group:'PII', sev:'critical',
+      count: shadowEmailCount, samples:['[ofuscación [at]/[dot]]'],
+    });
+  }
+
+  // ── Paso 2: Reglas principales sobre texto original ──────────────────────
+  const rules = state.intensity === 'paranoid'
+    ? [...BASIC_RULES, ...PARANOID_RULES]
+    : BASIC_RULES;
+
+  const enabledRules = rules.filter(r => r._enabled);
+
+  for (const rule of enabledRules) {
+    const re = rule.pattern();
+    re.lastIndex = 0;
+
+    // Dry-run: contar matches reales respetando postFilter y fn replacement
+    const matches = [];
+    let m;
+    const scanRe = new RegExp(re.source, re.flags);
+    while ((m = scanRe.exec(out)) !== null) {
+      if (rule.postFilter && !rule.postFilter(m[0])) continue;
+      if (typeof rule.replacement === 'function') {
+        const r = rule.replacement(...m);
+        if (r === m[0]) continue;
+      }
+      matches.push(m[0]);
+    }
+    if (!matches.length) continue;
+
+    // Aplicar sustitución
+    const replRe = new RegExp(re.source, re.flags);
+    if (typeof rule.replacement === 'function') {
+      out = out.replace(replRe, rule.replacement);
+    } else if (rule.postFilter) {
+      out = out.replace(replRe, (match) => rule.postFilter(match) ? rule.replacement : match);
+    } else {
+      out = out.replace(replRe, rule.replacement);
+    }
+
+    detections.push({
+      id:      rule.id,
+      label:   rule.label,
+      group:   rule.group,
+      sev:     rule.sev,
+      count:   matches.length,
+      samples: matches.slice(0, 2),
+    });
+  }
+
+  return { output: out, detections };
+}
+
+// ─────────────────────────────────────────────────────
+// Privacy Score v11 — token-type weights
+// ─────────────────────────────────────────────────────
+// Pesos por tipo de token detectado:
+//   CREDENTIAL/IBAN/TARJETA → 5  (datos financieros y accesos)
+//   EMAIL/TELEFONO           → 2  (PII identificativo)
+//   IP                       → 1  (infraestructura)
+// score = max(0, 100 - total_weight * 5)
+const TOKEN_WEIGHTS = {
+  CREDENTIAL:5, IBAN:5, TARJETA:5,
+  EMAIL:2, TELEFONO:2,
+  IP:1,
+};
+
+// Map rule.id → token type for weight lookup
+const RULE_TOKEN_MAP = {
+  email:'EMAIL', email_obf:'EMAIL', email_shadow:'EMAIL',
+  phone_es:'TELEFONO', phone_ctx:'TELEFONO',
+  iban:'IBAN', iban_raw:'IBAN', iban_paranoid:'IBAN',
+  credit_card:'TARJETA',
+  ctx_creds:'CREDENTIAL', openai_key:'CREDENTIAL', aws_key:'CREDENTIAL',
+  gcp_key:'CREDENTIAL', github_token:'CREDENTIAL', ssh_block:'CREDENTIAL',
+  pgp_block:'CREDENTIAL', jwt:'CREDENTIAL', env_var:'CREDENTIAL',
+  ipv4:'IP', ip_loose:'IP',
+};
+
+function computeScore(detections, textLen) {
+  if (!detections.length) return 100;
+  const totalWeight = detections.reduce((a,d) => {
+    const token = RULE_TOKEN_MAP[d.id] || null;
+    const w = token ? (TOKEN_WEIGHTS[token] || 1) : 1;
+    return a + d.count * w;
+  }, 0);
+  return Math.max(0, 100 - totalWeight * 5);
+}
+
+// 🟢 Seguro/Safe · 🟡 Revisar/Review · 🔴 Riesgo alto/High risk
+function riskLabel(score) {
+  if (score >= 80) return { text: t('safe'),    cls:'risk-safe' };
+  if (score >= 50) return { text: t('warning'), cls:'risk-warn' };
+  return            { text: t('danger'),         cls:'risk-high' };
+}
+// ─────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────
+
+// ═══════════════════════════════════════════════════════════════
+// § i18n — Multi-language support (ES / EN)
+// ═══════════════════════════════════════════════════════════════
+const i18n = {
+  es: {
+    title:             'Protector de privacidad para IA',
+    subtitle:          'Limpia tus prompts antes de enviarlos a la IA',
+    subtitle_sub:      'Detecta emails, contraseñas, IBANs, API keys y 20+ tipos de datos sensibles. Procesado 100% local, sin servidores.',
+    badge:             'GDPR · PCI DSS · 100% local',
+    input_label:       'Tu texto o prompt',
+    input_placeholder: 'Pega aquí tu texto, prompt, código o log…\n\n  javier@empresa.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  ES91 2100 0418 4502 0005 1332\n  password=s3cr3t!  ·  DNI: 12345678Z\n  192.168.1.100  ·  tel: 612 345 678',
+    clear_btn:         'Limpiar ✕',
+    file_label:        'Seleccionar archivo',
+    drop_text:         'Arrastra un archivo aquí',
+    drop_sub:          'o haz clic para seleccionarlo',
+    rules_label:       'Reglas activas',
+    enable_all:        'Activar todo',
+    disable_all:       'Desactivar',
+    paranoid_label:    'Modo Paranoico',
+    sanitize_button:   'Analizar y sanitizar',
+    copy_button:       'Copiar resultado',
+    download_button:   'Descargar',
+    reset_button:      'Limpiar',
+    example_button:    '⚡ Probar con ejemplo',
+    output_label:      'Resultado',
+    tab_sanitized:     'Sanitizado',
+    tab_original:      'Original',
+    tab_compare:       'Comparar',
+    detected_label:    'Datos detectados',
+    session_label:     'Resumen de sesión',
+    protected_label:   'datos protegidos',
+    score_label:       'Privacy Score',
+    findings_label:    'hallazgos',
+    scans_label:       'análisis',
+    files_label:       'archivos',
+    categories_label:  'categorías',
+    coverage_label:    'Cobertura',
+    safe:              '🟢 Seguro',
+    warning:           '🟡 Revisar',
+    danger:            '🔴 Riesgo alto',
+    processing:        'Procesando…',
+    copied:            '✓ copiado',
+    privacy_msg:       'Tus datos se procesan localmente en tu navegador',
+    faq_title:         'Preguntas frecuentes',
+    legal_title:       'Legal',
+    tab_text:          'Texto / Prompt',
+    tab_file:          'Archivo',
+    mode_basic:        'Básico',
+    mode_paranoid:     'Paranoico',
+    mode_label:        'Modo:',
+    // view tabs
+    // file
+    file_label:        'Seleccionar archivo',
+    drop_text:         'Arrastra un archivo aquí',
+    drop_sub:          'o haz clic para seleccionarlo',
+    // benefits section
+    benefits_title:    '¿Por qué sanitizar antes de usar IA?',
+    benefits_sub:      'Cada prompt enviado a ChatGPT, Claude o Gemini puede contener información que no quieres compartir con servidores externos.',
+    b1_title:          '100% en tu navegador',
+    b1_desc:           'Ningún dato sale de tu dispositivo. Sin servidores, sin base de datos, sin telemetría.',
+    b2_title:          'Cumplimiento GDPR',
+    b2_desc:           'Evita multas por transferir datos personales sin acuerdo de tratamiento firmado (DPA).',
+    b3_title:          '+20 tipos detectados',
+    b3_desc:           'Emails, IBANs, contraseñas, API keys, DNIs, IPs, rutas de sistema, wallets y más.',
+    b4_title:          'Soporta Excel y Word',
+    b4_desc:           'Limpia hojas de cálculo .xlsx y documentos .docx celda a celda, sin perder estructura.',
+    // footer
+    footer_tagline:    'Herramienta gratuita de privacidad.\n100% local · sin telemetría.',
+    footer_legal:      'Legal',
+    footer_privacy:    'Política de Privacidad',
+    footer_terms:      'Términos de Servicio',
+    footer_cookies:    'Política de Cookies',
+    footer_tool:       'Herramienta',
+    footer_faq_link:   'Preguntas frecuentes',
+    footer_try:        'Probar ejemplo',
+    footer_tech:       'Tecnología',
+    footer_copy:       '© 2025 SanitAI · Ningún dato sale de tu dispositivo.',
+    // hero
+    hero_badge:        'GDPR · PCI DSS · 100% local',
+    hero_version:      'SanitAI v20',
+  },
+  en: {
+    title:             'SanitAI',
+    subtitle:          'Clean your prompts before sending them to AI',
+    subtitle_sub:      'Detects emails, passwords, IBANs, API keys and 20+ types of sensitive data. 100% local processing, no servers.',
+    badge:             'GDPR · PCI DSS · 100% local',
+    input_label:       'Your text or prompt',
+    input_placeholder: 'Paste your text, prompt, code or log here…\n\n  user@company.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  GB29 NWBK 6016 1331 9268 19\n  password=s3cr3t!  ·  SSN: 123-45-6789\n  192.168.1.100  ·  tel: +1 555 123 4567',
+    clear_btn:         'Clear ✕',
+    file_label:        'Select file',
+    drop_text:         'Drag a file here',
+    drop_sub:          'or click to select',
+    rules_label:       'Active rules',
+    enable_all:        'Enable all',
+    disable_all:       'Disable all',
+    paranoid_label:    'Paranoid Mode',
+    sanitize_button:   'Analyze & sanitize',
+    copy_button:       'Copy result',
+    download_button:   'Download',
+    reset_button:      'Reset',
+    example_button:    '⚡ Try example',
+    output_label:      'Result',
+    tab_sanitized:     'Sanitized',
+    tab_original:      'Original',
+    tab_compare:       'Compare',
+    detected_label:    'Detected data',
+    session_label:     'Session summary',
+    protected_label:   'data protected',
+    score_label:       'Privacy Score',
+    findings_label:    'findings',
+    scans_label:       'scans',
+    files_label:       'files',
+    categories_label:  'categories',
+    coverage_label:    'Coverage',
+    safe:              '🟢 Safe',
+    warning:           '🟡 Review',
+    danger:            '🔴 High risk',
+    processing:        'Processing…',
+    copied:            '✓ copied',
+    privacy_msg:       'Your data is processed locally in your browser',
+    faq_title:         'FAQ',
+    legal_title:       'Legal',
+    tab_text:          'Text / Prompt',
+    tab_file:          'File',
+    mode_basic:        'Basic',
+    mode_paranoid:     'Paranoid',
+    mode_label:        'Mode:',
+    // view tabs
+    // file
+    file_label:        'Select file',
+    drop_text:         'Drag a file here',
+    drop_sub:          'or click to select',
+    // benefits section
+    benefits_title:    'Why sanitize before using AI?',
+    benefits_sub:      'Every prompt sent to ChatGPT, Claude or Gemini may contain information you don\'t want shared with external servers.',
+    b1_title:          '100% in your browser',
+    b1_desc:           'No data leaves your device. No servers, no database, no telemetry.',
+    b2_title:          'GDPR compliance',
+    b2_desc:           'Avoid fines for transferring personal data without a signed DPA.',
+    b3_title:          '20+ types detected',
+    b3_desc:           'Emails, IBANs, passwords, API keys, IDs, IPs, system paths, wallets and more.',
+    b4_title:          'Supports Excel and Word',
+    b4_desc:           'Cleans .xlsx and .docx files cell by cell, without losing structure.',
+    // footer
+    footer_tagline:    'Free privacy tool.\n100% local · no telemetry.',
+    footer_legal:      'Legal',
+    footer_privacy:    'Privacy Policy',
+    footer_terms:      'Terms of Service',
+    footer_cookies:    'Cookie Policy',
+    footer_tool:       'Tool',
+    footer_faq_link:   'FAQ',
+    footer_try:        'Try example',
+    footer_tech:       'Technology',
+    footer_copy:       '© 2025 SanitAI · No data leaves your device.',
+    // hero
+    hero_badge:        'GDPR · PCI DSS · 100% local',
+    hero_version:      'SanitAI v20',
+  }
+};
+
+let currentLang = 'es';
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('ps-lang', lang);
+  applyTranslations(lang);
+  // Update selector UI
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+}
+
+function t(key) {
+  return (i18n[currentLang] || i18n.es)[key] || key;
+}
+
+function applyTranslations(lang) {
+  const T = i18n[lang] || i18n.es;
+
+  // data-i18n elements — covers all tagged HTML nodes
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (T[key] === undefined) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      el.placeholder = T[key].replace(/\\n/g, '\n');
+    } else if (el.tagName === 'BUTTON') {
+      // preserve inner SVG icons when button has only text node
+      const icons = Array.from(el.childNodes).filter(n => n.nodeType === 1 && n.tagName === 'SVG');
+      el.textContent = T[key];
+      icons.forEach(svg => el.prepend(svg));
+    } else if (T[key].includes('<br')) {
+      // i18n values are internal constants; strip stray < > for safety
+      el.innerHTML = T[key].replace(/(?!<br\/?>)([<>])/g, c => c === '<' ? '&lt;' : '&gt;');
+    } else {
+      el.textContent = T[key];
+    }
+  });
+
+  // data-i18n-ph — placeholder-only elements
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.dataset.i18nPh;
+    if (T[key] !== undefined) el.placeholder = T[key].replace(/\\n/g, '\n');
+  });
+
+  // textarea placeholder (special: newlines in placeholder text)
+  const ta = document.getElementById('input-text');
+  if (ta && T['input_placeholder']) {
+    ta.placeholder = T['input_placeholder'].replace(/\n/g, '\n');
+  }
+
+  // Update FAQ section dynamically if already rendered
+  renderFAQ && renderFAQ();
+
+  // Update riskLabel in live score
+  const rb = document.getElementById('risk-badge');
+  if (rb && rb.style.display !== 'none') {
+    const score = parseInt(document.getElementById('score-pct')?.textContent) || 100;
+    const r = riskLabel(score);
+    rb.textContent = r.text;
+  }
+}
+
+function initLanguage() {
+  const saved = localStorage.getItem('ps-lang');
+  const browserLang = navigator.language?.startsWith('en') ? 'en' : 'es';
+  setLanguage(saved || browserLang);
+}
+
+
+// ── v19.1: Terms of use modal ────────────────────────────────────────────
+function acceptTerms() {
+  const overlay = document.getElementById('terms-overlay');
+  if (overlay) {
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .25s ease';
+    setTimeout(() => overlay.remove(), 260);
+  }
+  localStorage.setItem('ps-terms-accepted', '1');
+}
+
+function initTerms() {
+  // If already accepted, remove the overlay immediately (no flash)
+  if (localStorage.getItem('ps-terms-accepted') === '1') {
+    const overlay = document.getElementById('terms-overlay');
+    if (overlay) overlay.remove();
+  }
+  // Trap focus inside modal when visible
+  const box = document.getElementById('terms-box');
+  const btn = document.getElementById('terms-accept');
+  if (btn) btn.focus();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();                    // v11: apply saved theme
+  initLanguage();                 // v11: apply saved language
+  initTerms();                    // v19.1: show terms if not accepted
+  // v12: wire file input change listener
+  const _fi = document.getElementById('file-input');
+  if (_fi) _fi.addEventListener('change', handleFileUpload);
+  renderRulesGrid();
+  renderFAQ();
+  renderStatsBreakdown();
+  setupDropZone();
+  setupAutoScan();
+  setScore(100, []);
+  state.originalText = '';
+  state.viewMode = 'sanitized';
+});
+
+// ─────────────────────────────────────────────────────
+// RULES GRID
+// ─────────────────────────────────────────────────────
+function renderRulesGrid() {
+  renderRuleSet(BASIC_RULES,    'rules-grid');
+  renderRuleSet(PARANOID_RULES, 'paranoid-rules-grid');
+}
+
+function renderRuleSet(rules, containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = rules.map(r => {
+    const on = r._enabled;
+    return `<div class="rule-chip ${on?'on':''}" id="chip-${r.id}" onclick="toggleRule('${r.id}')">
+      <span class="dot"></span>
+      <span class="chip-label">${r.label}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleRule(id) {
+  const rule = [...BASIC_RULES,...PARANOID_RULES].find(r => r.id===id);
+  if (!rule) return;
+  rule._enabled = !rule._enabled;
+  const chip = document.getElementById(`chip-${id}`);
+  if (!chip) return;
+  chip.classList.toggle('on', rule._enabled);
+  chip.querySelector('.dot').style.background    = rule._enabled ? '#10b981' : '#2a2a2a';
+  chip.querySelector('.chip-label').style.color  = rule._enabled ? '#cccccc' : '#555555';
+}
+
+function toggleAllRules(on) {
+  const rules = state.intensity === 'paranoid'
+    ? [...BASIC_RULES,...PARANOID_RULES] : BASIC_RULES;
+  rules.forEach(r => { r._enabled = on; });
+  renderRulesGrid();
+  if (state.intensity === 'paranoid') {
+    document.getElementById('paranoid-rules-section').style.display = 'block';
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// INTENSITY
+// ─────────────────────────────────────────────────────
+function setIntensity(mode) {
+  state.intensity = mode;
+  const pSection = document.getElementById('paranoid-rules-section');
+  document.getElementById('intensity-basic').className    = mode==='basic'    ? 'mode-btn active'         : 'mode-btn';
+  document.getElementById('intensity-paranoid').className = mode==='paranoid' ? 'mode-btn active-paranoid': 'mode-btn';
+  pSection.style.display = mode==='paranoid' ? 'block' : 'none';
+}
+
+// ─────────────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('panel-text').classList.toggle('hidden', tab!=='text');
+  document.getElementById('panel-file').classList.toggle('hidden', tab!=='file');
+  document.getElementById('tab-text').className = tab==='text' ? 'tab-btn active' : 'tab-btn';
+  document.getElementById('tab-file').className = tab==='file' ? 'tab-btn active' : 'tab-btn';
+}
+
+// ─────────────────────────────────────────────────────
+// FILE HANDLING
+// ─────────────────────────────────────────────────────
+function setupDropZone() {
+  const dz = document.getElementById('drop-zone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag-over');
+    const f = e.dataTransfer.files[0]; if (f) processFile(f);
+  });
+}
+
+function handleFileSelect(e) {
+  const f = e.target.files[0]; if (f) processFile(f);
+}
+
+// v12: explicit FileReader listener per spec
+// v16: processDocx — arrayBuffer → mammoth → plain text
+async function processDocx(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const result      = await mammoth.extractRawText({ arrayBuffer });
+  return result.value;
+}
+
+// v16: processXlsx — arrayBuffer → SheetJS → CSV text per sheet
+async function processXlsx(file) {
+  const buffer   = await file.arrayBuffer();
+  const workbook = XLSX.read(buffer, { type: 'array' });
+  let output = '';
+  workbook.SheetNames.forEach(name => {
+    output += '\n--- ' + name + ' ---\n';
+    output += XLSX.utils.sheet_to_csv(workbook.Sheets[name]);
+  });
+  return output;
+}
+
+// v16: async handleFileUpload — uses arrayBuffer() for binary formats
+async function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  window.currentFile = file;
+  const ext    = file.name.split('.').pop().toLowerCase();
+  // Security: whitelist of allowed extensions — reject anything unexpected
+  const ALLOWED_EXT = new Set(['txt','csv','log','json','py','js','ts','env','yaml','yml','xml','md','sh','toml','ini','xlsx','xls','docx']);
+  // Security: file size limit (10MB) — prevents browser freeze / DoS
+  const MAX_SIZE = 10 * 1024 * 1024;
+  if (file.size > MAX_SIZE) {
+    const status = document.getElementById('fileStatus');
+    if (status) { status.textContent = 'Archivo demasiado grande (máx. 10MB)'; status.style.display = 'block'; status.style.color = 'var(--danger)'; }
+    window.currentFile = null;
+    return;
+  }
+  if (!ALLOWED_EXT.has(ext)) {
+    const status = document.getElementById('fileStatus');
+    if (status) { status.textContent = 'Formato no permitido: .' + ext; status.style.display = 'block'; status.style.color = 'var(--danger)'; }
+    window.currentFile = null;
+    return;
+  }
+  const status = document.getElementById('fileStatus');
+  if (status) { status.textContent = 'Cargando archivo...'; status.style.display = 'block'; }
+
+  const ta = document.getElementById('input-text');
+  let text = '';
+
+  try {
+    if (ext === 'docx') {
+      text = await processDocx(file);
+    } else if (ext === 'xlsx' || ext === 'xls') {
+      text = await processXlsx(file);
+    } else {
+      // text formats — keep original FileReader path
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        ta.value = e.target.result;
+        if (status) status.textContent = 'Archivo cargado: ' + file.name;
+        ta.dispatchEvent(new Event('input'));
+      };
+      reader.readAsText(file, 'UTF-8');
+      return;
+    }
+
+    // binary formats: insert extracted text → trigger auto-scan
+    ta.value = text;
+    if (status) status.textContent = 'Archivo cargado: ' + file.name;
+    ta.dispatchEvent(new Event('input'));
+
+  } catch (err) {
+    if (status) {
+      status.textContent = 'Error al cargar: ' + file.name;
+      status.style.color = 'var(--danger)';
+    }
+    if (typeof console !== 'undefined') console.error('[APS] File processing error — see details in dev tools');
+    alert('Error procesando el archivo. Formato no válido o archivo corrupto.');
+    return;
+  }
+}
+
+function processFile(file) {
+  state.fileName = file.name.replace(/\.[^/.]+$/,'') + '_cleaned';
+  const ext = file.name.split('.').pop().toLowerCase();
+  const fi  = document.getElementById('file-info');
+  document.getElementById('file-name').textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+  document.getElementById('file-type-badge').textContent = `.${ext}`;
+  fi.style.display = 'block';
+
+  if (['xlsx','xls'].includes(ext)) {
+    state.fileType = 'xlsx';
+    const r = new FileReader();
+    r.onload = e => { state.fileBuffer = e.target.result; };
+    r.readAsArrayBuffer(file);
+  } else if (ext==='docx') {
+    state.fileType = 'docx';
+    const r = new FileReader();
+    r.onload = e => { state.fileBuffer = e.target.result; };
+    r.readAsArrayBuffer(file);
+  } else {
+    state.fileType = 'text';
+    const r = new FileReader();
+    r.onload = e => {
+      document.getElementById('input-text').value = e.target.result;
+      switchTab('text');
+    };
+    r.readAsText(file,'UTF-8');
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// MAIN RUN
+// ─────────────────────────────────────────────────────
+async function runCleaner() {
+  const btn = document.getElementById('btn-clean');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Analizando…';
+
+  try {
+    if      (state.fileType==='xlsx' && state.fileBuffer) await runXlsxCleaner();
+    else if (state.fileType==='docx' && state.fileBuffer) await runDocxCleaner();
+    else                                                    runTextCleaner();
+  } catch(err) { flashError('Error: ' + err.message); }
+
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg> Analizar y Sanitizar';
+  }, 1000);
+}
+
+function runTextCleaner() {
+  const input = document.getElementById('input-text').value.trim();
+  if (!input) { flashError('Pega texto o sube un archivo.'); return; }
+  const { output, detections } = sanitize(input);
+  state.cleanedText  = output;
+  state.originalText = input;   // v6.2: guardar original para diff/preview
+  state.cleanedXlsx  = null;
+  finishRun(detections, output, input.length, 'text');
+}
+
+async function runXlsxCleaner() {
+  showSpinner(true);
+  await tick();
+  const wb = XLSX.read(new Uint8Array(state.fileBuffer), { type:'array', cellText:true });
+  const allDet = [];
+  let totalText = '';
+
+  wb.SheetNames.forEach(name => {
+    const ws = wb.Sheets[name];
+    Object.keys(ws).filter(k => !k.startsWith('!')).forEach(addr => {
+      const cell = ws[addr];
+      if (!cell || cell.t !== 's') return;
+      const raw = String(cell.v);
+      if (!raw.trim()) return;
+      totalText += raw;
+      const { output, detections } = sanitize(raw);
+      if (output !== raw) {
+        cell.v = output; cell.w = output;
+        detections.forEach(d => {
+          const ex = allDet.find(x => x.id===d.id);
+          if (ex) { ex.count+=d.count; ex.samples=[...ex.samples,...d.samples].slice(0,2); }
+          else allDet.push({...d});
+        });
+      }
+    });
+  });
+
+  const bytes = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+  state.cleanedXlsx = bytes;
+  state.cleanedText = `[Archivo Excel limpiado — ${wb.SheetNames.length} hoja(s). Descarga el .xlsx.]`;
+  state.session.files++;
+  showSpinner(false);
+  finishRun(allDet, state.cleanedText, totalText.length, 'xlsx');
+}
+
+async function runDocxCleaner() {
+  if (typeof mammoth === 'undefined') throw new Error('Mammoth no disponible.');
+  showSpinner(true);
+  const { value: rawText } = await mammoth.extractRawText({ arrayBuffer: state.fileBuffer });
+  const { output, detections } = sanitize(rawText);
+  state.cleanedText = output;
+  state.cleanedXlsx = null;
+  state.session.files++;
+  showSpinner(false);
+  finishRun(detections, output, rawText.length, 'docx');
+}
+
+function finishRun(detections, output, textLen, type) {
+  const total = detections.reduce((a,d) => a+d.count, 0);
+  const score = computeScore(detections, textLen);
+
+  state.session.scans++;
+  state.session.total += total;
+  detections.forEach(d => {
+    state.session.byCategory[d.label] = (state.session.byCategory[d.label]||0) + d.count;
+    state.session.uniqueTypes.add(d.id);
+  });
+
+  renderOutput(output, total, type);
+  renderCurrentView();                    // v6.2: paint initial view
+  renderDetectionLog(detections);
+  setScore(score, detections);
+  updateStats();
+
+  // v6.2: risk badge
+  const rb = document.getElementById('risk-badge');
+  if (rb) {
+    if (total === 0) {
+      rb.style.display = 'none';
+    } else {
+      const r = riskLabel(score);
+      rb.textContent   = r.text;
+      rb.className     = 'risk-badge ' + r.cls;
+      rb.style.display = 'inline-block';
+    }
+  }
+
+  // v6.2: security banner turns green after scan
+  const sb = document.getElementById('sec-banner');
+  if (sb) sb.classList.add('active');
+
+  document.getElementById('btn-copy').disabled     = false;
+  document.getElementById('btn-download').disabled = false;
+}
+
+function showSpinner(on) {
+  const el = document.getElementById('processing-indicator');
+  el.style.display = on ? 'inline-flex' : 'none';
+}
+
+function tick() { return new Promise(r => setTimeout(r, 60)); }
+
+// ─────────────────────────────────────────────────────
+// OUTPUT RENDER
+// ─────────────────────────────────────────────────────
+const ALL_TOKENS = [
+  'EMAIL','TELEFONO','DNI_NIE','IBAN','TARJETA','OPENAI_KEY','AWS_KEY','GCP_KEY',
+  'SSH_PRIVATE_KEY','PGP_PRIVATE_KEY','JWT','CREDENTIAL','IP','USER','SYSPATH',
+  'BTC_WALLET','ETH_WALLET','NOMBRE','MAC','URL_CREDENCIALES','HASH','DOCKER_DIGEST',
+  'VALOR_REDACTADO','HANDLE','GITHUB_TOKEN','TOKEN_ALTA_ENTROPIA',
+];
+
+// ── v6.2: current view mode ('sanitized' | 'original' | 'diff') ──────────
+state.viewMode = 'sanitized';
+
+function setView(mode) {
+  state.viewMode = mode;
+  ['sanitized','original','diff'].forEach(m => {
+    const tab = document.getElementById('vtab-' + m);
+    if (tab) tab.classList.toggle('active', m === mode);
+  });
+  if (state.cleanedText) renderCurrentView();
+}
+
+function renderCurrentView() {
+  const preview = document.getElementById('output-preview');
+  if (state.viewMode === 'original') {
+    preview.innerHTML = escH(state.originalText || state.cleanedText);
+    return;
+  }
+  if (state.viewMode === 'diff') {
+    preview.innerHTML = buildDiff(state.originalText || '', state.cleanedText);
+    return;
+  }
+  // sanitized (default)
+  let html = escH(state.cleanedText);
+  ALL_TOKENS.forEach(t => {
+    html = html.replaceAll(`[${t}]`, `<span class="token">[${t}]</span>`);
+  });
+  preview.innerHTML = html;
+}
+
+// Build diff view: original text with removals + token replacements highlighted
+// Strategy: split both strings by [TOKEN] markers, interleave with diffs
+function buildDiff(orig, sanitized) {
+  if (!orig) return escH(sanitized);
+
+  // Split sanitized by tokens to find replacement spans
+  const tokenRe = /(\[[A-Z_]+\])/g;
+  const parts = sanitized.split(tokenRe);
+  // parts alternates: text, [TOKEN], text, [TOKEN], ...
+
+  // Reconstruct sanitized without tokens to find what was removed
+  let origCursor = 0;
+  let out = '';
+
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (/^\[[A-Z_]+\]$/.test(part)) {
+      // This is a [TOKEN] — find the next text in parts[i+1] to locate
+      // where in orig this token boundary is
+      const nextText = parts[i + 1] || '';
+      // Find nextText in orig starting from cursor
+      const nextIdx = nextText ? orig.indexOf(nextText, origCursor) : orig.length;
+      const removedOrig = orig.slice(origCursor, nextIdx < 0 ? origCursor : nextIdx);
+      origCursor = nextIdx < 0 ? origCursor : nextIdx;
+      // Show: removed original (strikethrough) → token replacement
+      if (removedOrig) {
+        out += `<mark class="diff-del" title="Original: ${escH(removedOrig)}">${escH(removedOrig)}</mark>`;
+      }
+      out += `<mark class="diff-ins">${escH(part)}</mark>`;
+    } else {
+      // Regular text — advance cursor and output
+      if (part) {
+        const idx = orig.indexOf(part, origCursor);
+        if (idx >= 0) origCursor = idx + part.length;
+        out += escH(part);
+      }
+    }
+  }
+  return out;
+}
+
+function renderOutput(text, total, type) {
+  document.getElementById('output-panel').style.display = 'block';
+
+  // Reset to sanitized view on each new run
+  setView('sanitized');
+
+  const badge = document.getElementById('output-badge');
+  badge.textContent = total === 0
+    ? '✓ sin datos sensibles'
+    : `${total} elemento${total>1?'s':''} redactado${total>1?'s':''}`;
+  badge.style.color = total === 0 ? '#10b981' : '#f87171';
+  if (type === 'xlsx') badge.textContent += ' · xlsx';
+  else if (type === 'docx') badge.textContent += ' · docx';
+}
+
+function escH(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─────────────────────────────────────────────────────
+// DETECTION LOG v6.2 — expandable rows + explanations
+// ─────────────────────────────────────────────────────
+
+// Explicaciones simples por tipo — reduce dudas "¿por qué me borró esto?"
+const EXPLAIN = {
+  email:       '📧 Dirección de correo electrónico detectada',
+  email_obf:   'Email ofuscado detectado (formato [at]/arroba/punto). Técnica de evasión neutralizada.',
+  email_shadow:'Email con caracteres especiales que ocultaban el formato estándar.',
+  phone_es:    'Número de teléfono español (móvil 6xx/7xx o fijo 8xx/9xx con o sin +34).',
+  dni_nie:     'Documento Nacional de Identidad o NIE español (8 dígitos + letra).',
+  iban:        '🏦 Número de cuenta bancaria (IBAN) detectado',
+  iban_raw:    'Número de cuenta bancaria sin prefijo ES detectado por contexto.',
+  iban_paranoid:'Secuencia de dígitos con longitud compatible con IBAN detectada en modo Paranoico.',
+  ipv4:        '🌐 Dirección IP detectada',
+  ip_loose:    'IP con separadores no estándar (comas/espacios). Técnica de evasión neutralizada.',
+  credit_card: '💳 Número de tarjeta de crédito o débito detectado',
+  openai_key:  'API Key de OpenAI (sk-...). Acceso completo a tu cuenta si se filtra.',
+  aws_key:     '🔑 AWS Access Key detectada',
+  gcp_key:     'Google Cloud API Key. Puede generar costes o acceso no autorizado.',
+  github_token:'GitHub Personal Access Token. Acceso a repositorios y código fuente.',
+  ssh_block:   '🔒 Clave privada SSH/RSA detectada',
+  pgp_block:   'Clave privada PGP. Permite descifrar mensajes cifrados con tu identidad.',
+  jwt:         'JSON Web Token. Puede incluir sesión activa o datos de autenticación.',
+  ctx_creds:   '🔒 Posible contraseña o token detectado por contexto',
+  path_unix:   'Ruta de sistema Unix/Mac con nombre de usuario.',
+  path_win:    'Ruta de sistema Windows con nombre de usuario.',
+  path_sys:    'Ruta de sistema sensible (/etc, /var, /proc...).',
+  btc:         'Wallet de Bitcoin. Dirección pública que puede revelar transacciones.',
+  eth:         'Wallet de Ethereum (0x...). Dirección pública de la cadena.',
+  proper_nouns:'Nombre propio detectado en modo Paranoico. Solo palabras mid-sentence.',
+  mac:         'Dirección MAC de dispositivo (infraestructura de red).',
+  url_creds:   'URL con usuario:contraseña embebidos (formato http://user:pass@host).',
+  hash:        'Hash criptográfico (MD5/SHA1/SHA256). Puede identificar ficheros o contraseñas.',
+  docker_sha:  'Docker image digest (sha256:...). Identifica versión exacta de imagen.',
+  env_var:     'Variable de entorno con valor asignado (formato KEY=value de fichero .env).',
+  social:      'Handle de red social (@usuario).',
+  high_entropy:'String de alta entropía (>3.8 bits/char). Probable API key o secret sin prefijo conocido.',
+};
+
+function renderDetectionLog(detections) {
+  const panel = document.getElementById('detection-log');
+  const items = document.getElementById('log-items');
+  if (!detections.length) { panel.style.display='none'; return; }
+
+  const groups = {};
+  detections.forEach(d => {
+    if (!groups[d.group]) groups[d.group]=[];
+    groups[d.group].push(d);
+  });
+
+  const sevDot = {
+    critical: '<span style="width:6px;height:6px;border-radius:50%;background:#f87171;flex-shrink:0;display:inline-block;margin-right:5px" title="Crítico"></span>',
+    high:     '<span style="width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0;display:inline-block;margin-right:5px" title="Alto"></span>',
+    medium:   '<span style="width:6px;height:6px;border-radius:50%;background:#60a5fa;flex-shrink:0;display:inline-block;margin-right:5px" title="Medio"></span>',
+    low:      '<span style="width:6px;height:6px;border-radius:50%;background:#2a2a2a;flex-shrink:0;display:inline-block;margin-right:5px" title="Bajo"></span>',
+  };
+
+  let html = '', delay = 0, rowIdx = 0;
+
+  Object.entries(groups).forEach(([g,list]) => {
+    html += `<p class="group-label">${g}</p>`;
+    list.forEach(d => {
+      const dot     = sevDot[d.sev] || sevDot.low;
+      const explain = escH(EXPLAIN[d.id] || 'Dato sensible detectado por el motor de reglas.');
+      const samples = d.samples
+        .map(s => `<code style="font-size:10px;color:#fbbf24;font-family:'JetBrains Mono',monospace;background:rgba(251,191,36,.06);padding:0 3px;border-radius:2px">${escH(s.substring(0,32))}${s.length>32?'…':''}</code>`)
+        .join(' ');
+      const rid = 'dr' + rowIdx++;
+      html += `
+      <div class="det-row" id="${rid}" style="animation-delay:${delay}ms" onclick="toggleDetRow('${rid}')">
+        <div style="display:flex;align-items:center;min-width:0;flex:1">
+          ${dot}
+          <span style="font-size:13px;margin-right:3px">${escH(RULE_EMOJI[d.id]||'·')}</span><span style="font-size:11px;color:#cccccc;font-family:'JetBrains Mono',monospace">${escH(d.label)}</span>
+          <span style="font-size:10px;color:#555555;margin-left:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${samples}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:10px;color:#555555;font-weight:600">${d.count}×</span>
+          <span style="font-size:9px;color:#2a2a2a">▾</span>
+        </div>
+      </div>
+      <div class="det-explain" id="${rid}-exp">${explain}</div>`;
+      delay += 30;
+    });
+  });
+
+  items.innerHTML = html;
+  panel.style.display = 'block';
+}
+
+function toggleDetRow(rid) {
+  const row = document.getElementById(rid);
+  const exp = document.getElementById(rid + '-exp');
+  if (!row || !exp) return;
+  const isOpen = row.classList.contains('det-open');
+  row.classList.toggle('det-open', !isOpen);
+  exp.style.display = isOpen ? 'none' : 'block';
+  const arr = row.querySelector('span:last-child');
+  if (arr) arr.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// ─────────────────────────────────────────────────────
+// PRIVACY SCORE
+// ─────────────────────────────────────────────────────
+function setScore(score, detections) {
+  const pct   = score + '%';
+  const total = detections ? detections.reduce((a,d)=>a+d.count,0) : 0;
+
+  // Color ramp
+  let color;
+  if      (score >= 85) color = '#10b981';
+  else if (score >= 65) color = '#34d399';
+  else if (score >= 45) color = '#fbbf24';
+  else if (score >= 25) color = '#f97316';
+  else                  color = '#f87171';
+
+  // Update both score bars (header + sidebar)
+  ['score-bar','score-bar-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.width      = pct;
+    el.style.background = color;
+  });
+  ['score-pct','score-pct-2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = pct;
+    el.style.color  = color;
+  });
+
+  // Header detect count
+  const hdc = document.getElementById('header-detect-count');
+  if (hdc) {
+    hdc.textContent = total > 0 ? `${total} det.` : '—';
+    hdc.style.color = total > 0 ? '#f87171' : '#555555';
+  }
+}
+
+// ─────────────────────────────────────────────────────
+// SESSION STATS
+// ─────────────────────────────────────────────────────
+function updateStats() {
+  animN('shield-count', state.session.total);
+  animN('s-total',      state.session.total);
+  animN('s-scans',      state.session.scans);
+  animN('s-files',      state.session.files);
+  animN('s-types',      state.session.uniqueTypes.size);
+  renderStatsBreakdown();
+}
+
+function animN(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const cur = parseInt(el.textContent)||0;
+  const diff = target - cur; if (!diff) return;
+  let step = 0; const steps = 16;
+  const iv = setInterval(() => {
+    step++;
+    el.textContent = Math.round(cur + diff*step/steps);
+    if (step>=steps){ el.textContent=target; clearInterval(iv); }
+  }, 20);
+  el.classList.add('stat-update');
+  setTimeout(() => el.classList.remove('stat-update'), 500);
+}
+
+function renderStatsBreakdown() {
+  const el = document.getElementById('stats-breakdown');
+  const entries = Object.entries(state.session.byCategory).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if (!entries.length) { el.innerHTML = '<p style="font-size:10px;color:#2a2a2a">sin datos</p>'; return; }
+  const max = Math.max(...entries.map(([,v])=>v));
+  el.innerHTML = entries.map(([label,count]) => `
+    <div style="display:flex;align-items:center;gap:7px">
+      <span style="font-size:10px;color:#555555;width:88px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${label}</span>
+      <div class="score-track" style="flex:1">
+        <div class="score-fill" style="width:${Math.round((count/max)*100)}%;background:#10b981;transition:width .5s ease"></div>
+      </div>
+      <span style="font-size:10px;color:#10b981;font-family:'JetBrains Mono',monospace;min-width:18px;text-align:right">${count}</span>
+    </div>`
+  ).join('');
+}
+
+// ─────────────────────────────────────────────────────
+// ACTIONS
+// ─────────────────────────────────────────────────────
+function copyOutput() {
+  // v11: read plaintext from output element (strips HTML tokens markup)
+  const el = document.getElementById('output-preview');
+  const text = (el ? (el.innerText || el.textContent) : state.cleanedText)
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd();
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('btn-copy');
+    const orig = btn.innerHTML;
+    btn.innerHTML = t('copied');
+    btn.style.color = 'var(--success)';
+    btn.style.borderColor = 'rgba(52,211,153,.3)';
+    setTimeout(() => { btn.innerHTML=orig; btn.style.color=''; btn.style.borderColor=''; }, 1800);
+  }).catch(() => {
+    // Fallback for non-HTTPS contexts
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  });
+}
+
+// v13: preserve original filename + extension on download
+function getSanitizedFileName(originalName) {
+  const parts = originalName.split('.');
+  if (parts.length < 2) return originalName + '_sanitizado';
+  const ext  = parts.pop();
+  const base = parts.join('.');
+  return base + '_sanitizado.' + ext;
+}
+
+function getMimeType(filename) {
+  const ext = filename.split('.').pop().toLowerCase();
+  const map = {
+    txt:'text/plain', csv:'text/csv', json:'application/json',
+    js:'application/javascript', ts:'application/typescript',
+    py:'text/x-python', env:'text/plain', md:'text/markdown',
+    yaml:'text/yaml', yml:'text/yaml', xml:'text/xml',
+    sh:'text/x-sh', log:'text/plain', toml:'text/plain', ini:'text/plain',
+  };
+  return map[ext] || 'text/plain';
+}
+
+function downloadOutput() {
+  // v15: docx/xlsx have proper pipelines — no hard stop needed here
+  if (state.cleanedXlsx) {
+    triggerDL(
+      new Blob([new Uint8Array(state.cleanedXlsx)], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
+      `${state.fileName}.xlsx`
+    );
+  } else if (state.cleanedText) {
+    const origFile = window.currentFile;
+    const dlName   = origFile ? getSanitizedFileName(origFile.name) : `${state.fileName}_sanitizado.txt`;
+    const mime     = origFile ? getMimeType(origFile.name) : 'text/plain';
+    triggerDL(new Blob([state.cleanedText], { type: mime + ';charset=utf-8' }), dlName);
+  }
+}
+
+function triggerDL(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a   = Object.assign(document.createElement('a'), { href:url, download:filename });
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function clearInput() { document.getElementById('input-text').value = ''; }
+
+function resetAll() {
+  document.getElementById('input-text').value = '';
+  state.cleanedText = ''; state.cleanedXlsx = null;
+  state.fileBuffer = null; state.fileType = 'text';
+  window.currentFile = null;  // security: clear file reference on reset
+  document.getElementById('output-panel').style.display    = 'none';
+  document.getElementById('detection-log').style.display   = 'none';
+  document.getElementById('btn-copy').disabled             = true;
+  document.getElementById('btn-download').disabled         = true;
+  document.getElementById('file-info').style.display       = 'none';
+  document.getElementById('file-input').value              = '';
+  setScore(100, []);
+}
+
+function flashError(msg) {
+  const btn = document.getElementById('btn-clean');
+  btn.textContent = '✕ ' + msg;
+  btn.style.background = 'rgba(248,113,113,.15)';
+  btn.style.color = '#f87171';
+  setTimeout(() => {
+    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg> Analizar y Sanitizar';
+    btn.style.background = '#10b981';
+    btn.style.color = '#050505';
+  }, 2500);
+}
+
+// ─────────────────────────────────────────────────────
+// FAQ
+// ─────────────────────────────────────────────────────
+const FAQ_DATA = {
+  es: [
+    { q:'¿Los datos se envían a algún servidor?',
+      a:'No. Todo el procesamiento ocurre en tu navegador mediante JavaScript nativo. Verifica en DevTools → Network: no hay peticiones HTTP durante el análisis.' },
+    { q:'¿Puede limpiar archivos Excel con datos personales?',
+      a:'Sí. La herramienta usa SheetJS en el cliente para recorrer todas las celdas, aplica las reglas de detección y genera un archivo limpio descargable.' },
+    { q:'¿Qué diferencia hay entre modo Básico y Paranoico?',
+      a:'El modo Básico cubre PII estándar: email, teléfono, DNI, IBAN, tarjetas, API keys, IPs y credenciales. El modo Paranoico añade nombres propios, MACs, hashes y URLs con credenciales.' },
+    { q:'¿Viola GDPR usar ChatGPT con datos de empleados?',
+      a:'Potencialmente sí. El Artículo 28 GDPR exige DPA firmado con cada subprocesador. Enviar datos personales sin ese acuerdo puede suponer multas de hasta el 4% del volumen global.' },
+    { q:'¿Funciona sin conexión a internet?',
+      a:'El motor de detección funciona sin conexión. Las tipografías y librerías CDN requieren conexión la primera vez, pero el procesamiento es siempre local.' },
+  ],
+  en: [
+    { q:'Is data sent to any server?',
+      a:'No. All processing happens in your browser via native JavaScript. Check DevTools → Network: no HTTP requests are made during analysis.' },
+    { q:'Can it clean Excel files with personal data?',
+      a:'Yes. The tool uses SheetJS client-side to iterate all cells, applies detection rules and generates a clean downloadable file.' },
+    { q:'What is the difference between Basic and Paranoid mode?',
+      a:'Basic mode covers standard PII: email, phone, ID, IBAN, cards, API keys, IPs and credentials. Paranoid mode adds proper names, MACs, hashes and URLs with credentials.' },
+    { q:'Does GDPR apply when using ChatGPT with employee data?',
+      a:'Potentially yes. Article 28 GDPR requires a signed DPA with each sub-processor. Sending personal data without that agreement can result in fines up to 4% of global turnover.' },
+    { q:'Does it work offline?',
+      a:'The detection engine works offline. CDN fonts and libraries require a connection the first time, but processing is always local.' },
+  ],
+};
+
+// ─────────────────────────────────────────────────────
+// v6.2 — DEMO EXAMPLE
+// ─────────────────────────────────────────────────────
+function loadExample() {
+  const example = `usuario@gmail.com
+ES91 2100 0418 4502 0005 1332
+password=123456
+
+— Más ejemplos —
+📧 Email:    javier.admin@empresa.es
+🏦 IBAN:     ES21 1465 0100 72 2030876293
+💳 Tarjeta:  4532 0123 4567 8901
+🔒 Token:    db_password: "SuperSecret_Pass_2026!"
+☁️  AWS Key:  AKIA1234567890EXAMPLE
+🌐 IP:       192.168.1.105`;
+
+  const ta = document.getElementById('input-text');
+  ta.value = example;
+  switchTab('text');
+  // Auto-trigger scan after a brief pause
+  setTimeout(() => { if (document.getElementById('input-text').value) runCleaner(); }, 300);
+}
+
+// ─────────────────────────────────────────────────────
+// v6.2 — AUTO-SCAN (debounce 500ms)
+// ─────────────────────────────────────────────────────
+let _autoScanTimer = null;
+function setupAutoScan() {
+  const ta = document.getElementById('input-text');
+  if (!ta) return;
+  ta.addEventListener('input', () => {
+    clearTimeout(_autoScanTimer);
+    // Only auto-scan if there's meaningful text (>30 chars)
+    _autoScanTimer = setTimeout(() => {
+      if (ta.value.trim().length > 30 && state.fileType === 'text') {
+        runCleaner();
+      }
+    }, 500);
+  });
+}
+
+function renderFAQ() {
+  const FAQ = (FAQ_DATA[currentLang] || FAQ_DATA.es);
+  document.getElementById('faq-list').innerHTML = FAQ.map((item, i) => `
+    <div style="border:1px solid #1a1a1a;border-radius:5px;overflow:hidden;background:#0c0c0c">
+      <button
+        style="width:100%;text-align:left;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:transparent;border:none;cursor:pointer;transition:background .12s"
+        onclick="toggleFAQ(${i})"
+        onmouseover="this.style.background='#111111'"
+        onmouseout="this.style.background='transparent'"
+      >
+        <h3 style="font-size:13px;font-weight:500;color:#cccccc;line-height:1.45">${item.q}</h3>
+        <span id="faq-arr-${i}" style="color:#10b981;font-size:12px;flex-shrink:0;margin-top:2px;transition:transform .2s">▾</span>
+      </button>
+      <div id="faq-bd-${i}" style="display:none;padding:0 14px 12px">
+        <p style="font-size:12.5px;color:#888888;line-height:1.7">${item.a}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const bd  = document.getElementById(`faq-bd-${i}`);
+  const arr = document.getElementById(`faq-arr-${i}`);
+  const open = bd.style.display !== 'none';
+  bd.style.display    = open ? 'none' : 'block';
+  arr.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+// ── v7: emoji map for rule labels ──────────────────────────────────────────
+const RULE_EMOJI = {
+  email:'📧', email_obf:'📧', email_shadow:'📧',
+  phone_es:'📱', phone_ctx:'📱',
+  dni_nie:'🪪',
+  iban:'🏦', iban_raw:'🏦', iban_paranoid:'🏦',
+  credit_card:'💳',
+  openai_key:'🔑', aws_key:'☁️', gcp_key:'☁️', github_token:'🔑',
+  ssh_block:'🔒', pgp_block:'🔒', jwt:'🔒',
+  ctx_creds:'🔒',
+  ipv4:'🌐', ip_loose:'🌐',
+  path_unix:'📁', path_win:'📁', path_sys:'📁',
+  btc:'₿', eth:'₿',
+  proper_nouns:'🧠', mac:'📡', url_creds:'🔗',
+  hash:'#', docker_sha:'🐳', env_var:'⚙️', social:'@',
+  high_entropy:'🎲',
+};
+
+// Override renderRuleSet to use light-mode toggle styles
+function renderRuleSet(rules, gridId) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  grid.innerHTML = '';
+  rules.forEach(rule => {
+    if (!rule.label) return;
+    const emoji = RULE_EMOJI[rule.id] || '·';
+    const on = rule._enabled !== false;
+    const el = document.createElement('div');
+    el.className = 'rule-toggle' + (on ? ' on' : '');
+    el.dataset.id = rule.id;
+    el.innerHTML = `<span class="dot"></span><span>${escH(emoji)} ${escH(rule.label)}</span>`;
+    el.onclick = () => {
+      rule._enabled = !rule._enabled;
+      el.classList.toggle('on', rule._enabled);
+      el.querySelector('.dot').style.background = rule._enabled ? 'var(--accent)' : 'var(--border)';
+    };
+    grid.appendChild(el);
+  });
+}
+
+// ─────────────────────────────────────────────────────
+// v11: Dark / Light theme toggle
+// ─────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  const next = isDark ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('ps-theme', next);
+  document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
+}
+
+function initTheme() {
+  // Prefer saved, then system preference
+  const saved = localStorage.getItem('ps-theme');
+  const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = saved || (sysDark ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', theme);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+}
+
+// Run immediately (before DOMContentLoaded to avoid flash)
+initTheme();
+
+</script>
