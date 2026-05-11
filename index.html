@@ -27,14 +27,12 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-
 <style>
 /* ═══════════════════════════════════════════════════
    SanitAI v20 — Design System
    Inspiración: Linear · Vercel · Craft — NO genérico
 ═══════════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 /* ── Tokens: Light ── */
 :root{
   --bg:        #EEF2F7;
@@ -61,7 +59,6 @@
   --mono:      'JetBrains Mono','Fira Code','Cascadia Code',ui-monospace,monospace;
   --transition-theme: background .2s ease, color .2s ease, border-color .2s ease;
 }
-
 /* ── Tokens: Dark ── */
 [data-theme="dark"]{
   --bg:        #0B1120;
@@ -83,7 +80,6 @@
   --shadow-sm: 0 1px 3px rgba(0,0,0,.35);
   --shadow:    0 3px 12px rgba(0,0,0,.4);
 }
-
 /* ── Base ── */
 html{scroll-behavior:smooth;font-size:14px}
 body{
@@ -96,17 +92,14 @@ body{
 }
 .page-wrap{min-height:100vh;display:flex;flex-direction:column}
 main{flex:1}
-
 /* ── Animations ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 .fade-in{animation:fadeUp .2s ease}
 .spin{animation:spin .9s linear infinite}
 .hidden{display:none!important}
-
 /* ── Layout ── */
 .container{max-width:1100px;margin:0 auto;padding:0 20px}
-
 /* ── Header ── */
 .site-header{
   background:var(--surface);
@@ -118,7 +111,6 @@ main{flex:1}
   height:100%;display:flex;align-items:center;
   justify-content:space-between;gap:12px;
 }
-
 /* Logo */
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none}
 .logo-icon{
@@ -134,12 +126,10 @@ main{flex:1}
   border:1px solid var(--border);
   border-radius:3px;padding:1px 5px;
 }
-
 /* Score strip */
 .score-track{height:4px;border-radius:2px;background:var(--border);flex:1;min-width:48px;overflow:hidden}
 .score-fill{height:100%;border-radius:2px;transition:width .4s ease,background .4s}
 .header-score-wrap{display:flex;align-items:center;gap:7px}
-
 /* Security banner */
 .sec-banner{
   display:inline-flex;align-items:center;gap:5px;
@@ -154,7 +144,6 @@ main{flex:1}
   border-color:rgba(5,150,105,.25);
   background:rgba(5,150,105,.05);
 }
-
 /* Theme toggle */
 .theme-toggle{
   width:30px;height:30px;border-radius:5px;
@@ -165,7 +154,6 @@ main{flex:1}
   flex-shrink:0;
 }
 .theme-toggle:hover{background:var(--bg-2);color:var(--text-1);border-color:var(--text-4)}
-
 /* ── Cards ── */
 .card{
   background:var(--surface);
@@ -182,7 +170,6 @@ main{flex:1}
   font-size:10px;font-weight:600;letter-spacing:.08em;
   text-transform:uppercase;color:var(--text-4);
 }
-
 /* ── Tabs ── */
 .tab-group{
   display:flex;gap:1px;
@@ -196,7 +183,6 @@ main{flex:1}
 }
 .tab-btn.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
 .tab-btn:hover:not(.active){color:var(--text-2)}
-
 /* ── Mode buttons ── */
 .mode-group{display:flex;gap:1px;background:var(--border);border-radius:5px;padding:1px}
 .mode-btn{
@@ -206,7 +192,6 @@ main{flex:1}
 }
 .mode-btn.active{background:var(--accent);color:#fff}
 .mode-btn:hover:not(.active){color:var(--text-2)}
-
 /* ── Buttons ── */
 .btn{
   display:inline-flex;align-items:center;gap:6px;
@@ -236,7 +221,6 @@ main{flex:1}
 .btn-danger{background:none;color:var(--danger);border-color:var(--border)}
 .btn-danger:hover{background:rgba(220,38,38,.06);border-color:var(--danger)}
 .btn-sm{font-size:11px;padding:5px 10px}
-
 /* ── Textarea ── */
 .input-area{
   width:100%;min-height:200px;resize:vertical;
@@ -249,7 +233,6 @@ main{flex:1}
 }
 .input-area:focus{background:var(--surface);color:var(--text-1)}
 .input-area::placeholder{color:var(--text-4)}
-
 /* ── Rule toggles ── */
 .rule-toggle{
   display:inline-flex;align-items:center;gap:4px;
@@ -266,7 +249,6 @@ main{flex:1}
 }
 .rule-toggle .dot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:background .15s}
 .rule-toggle.on .dot{background:var(--accent)}
-
 /* ── View tabs ── */
 .view-tab{
   font-size:11px;font-weight:500;color:var(--text-3);
@@ -274,7 +256,6 @@ main{flex:1}
   padding:3px 9px;border-radius:4px;transition:all .1s;
 }
 .view-tab.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
-
 /* ── Token ── */
 .token{
   display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:600;
@@ -283,7 +264,6 @@ main{flex:1}
   border-radius:3px;padding:0 4px;
   vertical-align:baseline;letter-spacing:.01em;
 }
-
 /* ── Diff ── */
 mark.diff-del{
   background:rgba(220,38,38,.08);color:var(--danger);
@@ -294,7 +274,6 @@ mark.diff-ins{
   background:var(--accent-lt);color:var(--accent);
   border-radius:3px;padding:0 3px;font-weight:600;font-style:normal;
 }
-
 /* ── Detection log ── */
 .det-row{
   display:flex;align-items:center;justify-content:space-between;
@@ -308,13 +287,11 @@ mark.diff-ins{
   border-top:1px solid var(--border-2);font-style:italic;
 }
 .det-open + .det-explain{display:block}
-
 /* ── Risk badge ── */
 .risk-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px;letter-spacing:.01em}
 .risk-safe{background:rgba(5,150,105,.08);color:var(--success)}
 .risk-warn{background:rgba(217,119,6,.08);color:var(--warn)}
 .risk-high{background:rgba(220,38,38,.08);color:var(--danger)}
-
 /* ── Drop zone ── */
 .drop-zone{
   border:1px dashed var(--border);border-radius:0 0 var(--radius) var(--radius);
@@ -322,7 +299,6 @@ mark.diff-ins{
   background:var(--surface-2);transition:all .15s;
 }
 .drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:var(--accent-lt)}
-
 /* ── Stats ── */
 .stat-box{
   background:var(--bg-2);border:1px solid var(--border-2);
@@ -330,7 +306,6 @@ mark.diff-ins{
 }
 .stat-num{font-size:20px;font-weight:600;color:var(--text-1);line-height:1}
 .stat-lbl{font-size:10px;color:var(--text-4);margin-top:2px;letter-spacing:.02em}
-
 /* ── Coverage ── */
 .cover-row{
   display:flex;justify-content:space-between;align-items:center;
@@ -340,7 +315,6 @@ mark.diff-ins{
 .cover-row:last-child{border-bottom:none}
 .cover-check{font-size:11px;color:var(--success);font-weight:700}
 .cover-plus{font-size:10px;color:var(--warn);font-weight:600}
-
 /* ── Policies ── */
 .policy-details{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
 .policy-details+.policy-details{margin-top:6px}
@@ -360,7 +334,6 @@ mark.diff-ins{
 .policy-body p{margin-bottom:9px}
 .policy-body ul{margin:5px 0 9px 16px}
 .policy-body li{margin-bottom:3px}
-
 /* ── FAQ ── */
 .faq-item{border:1px solid var(--border);border-radius:5px;overflow:hidden;background:var(--surface);margin-bottom:4px}
 .faq-q{
@@ -373,11 +346,9 @@ mark.diff-ins{
 .faq-item.open .arr{transform:rotate(180deg)}
 .faq-a{display:none;padding:0 14px 12px;font-size:12px;color:var(--text-3);line-height:1.65}
 .faq-item.open .faq-a{display:block}
-
 /* ── Section header ── */
 .section-title{font-size:17px;font-weight:600;color:var(--text-1);letter-spacing:-.025em;margin-bottom:5px}
 .section-sub{font-size:13px;color:var(--text-3);line-height:1.6}
-
 /* ── Benefits ── */
 .benefit-card{
   background:var(--surface);border:1px solid var(--border);
@@ -387,7 +358,6 @@ mark.diff-ins{
 .benefit-icon{font-size:22px;margin-bottom:8px}
 .benefit-title{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:5px}
 .benefit-desc{font-size:12px;color:var(--text-3);line-height:1.55}
-
 /* ── Footer ── */
 footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top:auto}
 .footer-inner{padding:28px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:24px}
@@ -398,7 +368,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
 .footer-bottom{border-top:1px solid var(--border-2);padding:14px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:11px;color:var(--text-4)}
 .pill{font-size:10px;border:1px solid var(--border);border-radius:3px;padding:2px 7px;color:var(--text-4)}
 .pill-accent{border-color:rgba(37,99,235,.3);color:var(--accent);background:var(--accent-lt)}
-
 /* ── Output preview ── */
 #output-preview{
   padding:14px;font-family:var(--mono);font-size:12px;
@@ -406,11 +375,8 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
   white-space:pre-wrap;word-break:break-word;
   max-height:340px;overflow-y:auto;
 }
-
 /* ── Misc ── */
 .group-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-4);padding:8px 0 4px;margin-top:4px}
-
-
 /* ── Language selector ── */
 .lang-selector{display:flex;gap:1px;background:var(--border);border-radius:4px;padding:1px}
 .lang-btn{
@@ -420,18 +386,7 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
 }
 .lang-btn.active{background:var(--surface);color:var(--text-1);box-shadow:var(--shadow-sm)}
 .lang-btn:hover:not(.active){color:var(--text-2)}
-
-/* ── Responsive ── */
-@media(max-width:700px){
-  .header-score-wrap{display:none}
-  .sec-banner .banner-text{display:none}
-  .container{padding:0 14px}
-}
-@media(min-width:1040px){
-  #main-grid{grid-template-columns:1fr 260px!important}
-}
-
-/* ── Terms modal v19.1 ── */
+/* ── Terms modal ── */
 #terms-overlay{
   position:fixed;inset:0;z-index:9999;
   background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
@@ -475,13 +430,140 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
   font-size:11px;color:var(--text-4);text-align:center;
 }
 
+/* ══════════════════════════════════════════════════════
+   RESPONSIVE — Tablet (≤ 768px) y Móvil (≤ 480px)
+   Restricciones: solo CSS, sin cambiar HTML ni JS
+══════════════════════════════════════════════════════ */
+
+/* ── Breakpoint desktop grande ── */
+@media(min-width:1040px){
+  #main-grid{grid-template-columns:1fr 260px!important}
+}
+
+/* ── Breakpoint tablet (≤ 768px) ── */
+@media(max-width:768px){
+  .container{padding:0 16px}
+  .header-score-wrap{display:none}
+  .sec-banner .banner-text{display:none}
+  .sec-banner{padding:3px 7px}
+  section[style*="padding-top:32px"]{padding-top:20px!important;padding-bottom:20px!important}
+  h1[style*="clamp"]{font-size:clamp(16px,3vw,22px)!important}
+  #main-grid{
+    grid-template-columns:1fr!important;
+    gap:16px;
+  }
+  #right-sidebar{order:2}
+  #right-sidebar .card[style*="padding:20px"]{padding:16px!important}
+  #main-grid > div:first-child > div:first-child{
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  #main-grid > div:first-child > div[style*="flex-wrap:wrap"]{
+    gap:6px;
+  }
+  section[style*="padding:48px 0"] .container > div[style*="grid-template-columns"]{
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:12px;
+  }
+  .footer-inner{
+    grid-template-columns:repeat(2,1fr)!important;
+    gap:16px;
+  }
+  .footer-brand{grid-column:1 / -1}
+  .footer-bottom{justify-content:center;text-align:center}
+  #output-panel .card-header{flex-wrap:wrap;gap:8px}
+  #view-tabs{flex-wrap:wrap}
+  .policy-body{padding:14px}
+  .policy-summary{padding:12px 14px}
+  #terms-box .tb-body{max-height:200px}
+}
+
+/* ── Breakpoint móvil (≤ 480px) ── */
+@media(max-width:480px){
+  .container{padding:0 12px}
+  .site-header{height:48px}
+  .logo-badge{display:none}
+  .logo-name{font-size:13px}
+  .lang-btn{padding:3px 6px;font-size:12px}
+  .tab-group{width:100%}
+  .tab-btn{flex:1;text-align:center;padding:6px 8px}
+  .mode-group{width:100%}
+  .mode-btn{flex:1;text-align:center;padding:5px 6px}
+  #main-grid > div:first-child > div:first-child{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .input-area{min-height:160px;font-size:13px}
+  #main-grid > div:first-child > div[style*="flex-wrap:wrap"]{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  #main-grid > div:first-child > div[style*="flex-wrap:wrap"] .btn{
+    width:100%;
+    justify-content:center;
+    padding:10px 14px;
+    font-size:13px;
+  }
+  #processing-indicator{justify-content:center}
+  .card-header{flex-wrap:wrap;gap:6px;padding:8px 12px}
+  #output-panel .card-header{gap:6px}
+  #view-tabs .view-tab{padding:3px 7px;font-size:10px}
+  #output-preview{max-height:240px;font-size:11.5px;padding:12px}
+  #log-items{max-height:220px}
+  .det-row{padding:6px 10px;gap:6px}
+  #right-sidebar .card[style*="padding:20px"]{padding:14px!important}
+  #right-sidebar .card[style*="padding:16px 20px"]{padding:12px 14px!important}
+  .stat-num{font-size:18px}
+  .stat-box{padding:8px 10px}
+  section[style*="padding:48px 0"]{padding:32px 0!important}
+  section[style*="padding:48px 0"] .container > div[style*="grid-template-columns"]{
+    grid-template-columns:1fr!important;
+  }
+  section[style*="padding-top:32px"]{padding-top:16px!important;padding-bottom:16px!important}
+  h1[style*="clamp"]{font-size:clamp(15px,5.5vw,20px)!important}
+  p[style*="font-size:13px"][style*="max-width:420px"]{font-size:12px!important}
+  section[style*="padding:56px 0"]{padding:32px 0!important}
+  section[style*="padding:40px 0 64px"]{padding:24px 0 40px!important}
+  .policy-body{padding:12px;font-size:11.5px}
+  .policy-summary{padding:10px 12px;font-size:12px}
+  .footer-inner{
+    grid-template-columns:1fr!important;
+    gap:16px;
+    padding:20px 0;
+  }
+  .footer-brand{grid-column:auto}
+  .footer-bottom{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .footer-bottom > div{flex-wrap:wrap;gap:4px}
+  #terms-overlay{padding:12px}
+  #terms-box .tb-header{padding:16px 16px 0}
+  #terms-box .tb-body{padding:12px 16px;max-height:180px;font-size:11.5px}
+  #terms-box .tb-footer{padding:12px 16px}
+  #terms-footer-note{font-size:10px}
+  .drop-zone{padding:28px 16px}
+  .cover-row{font-size:11px}
+  #rules-grid,#paranoid-rules-grid{gap:4px}
+  .rule-toggle{font-size:10px;padding:3px 7px}
+  .group-label{padding:6px 0 3px}
+}
+
+/* ── Fix táctil universal ── */
+@media(max-width:768px){
+  .btn,.tab-btn,.mode-btn,.lang-btn,.theme-toggle,
+  .rule-toggle,.view-tab,.faq-q,.policy-summary{
+    min-height:36px;
+  }
+  .input-area,input,select,textarea{font-size:max(16px,1em)}
+  .input-area{font-size:max(13px,16px)}
+}
 </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9884801070199292"
      crossorigin="anonymous"></script>
 </head>
-
 <body class="page-wrap">
-
 <!-- ══════════════════ TERMS MODAL v19.1 ══════════════════ -->
 <div id="terms-overlay" role="dialog" aria-modal="true" aria-labelledby="terms-title">
   <div id="terms-box">
@@ -494,7 +576,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <p style="font-size:11px;color:var(--text-4)">Términos de uso · Terms of Use</p>
       </div>
     </div>
-
     <div class="tb-body">
       <!-- ESPAÑOL -->
       <h3>🇪🇸 Términos de uso</h3>
@@ -505,9 +586,7 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <li>El usuario es responsable de verificar los resultados antes de compartir el contenido sanitizado.</li>
         <li>No nos hacemos responsables de datos sensibles no detectados (falsos negativos) ni de contenido eliminado por error (falsos positivos).</li>
       </ul>
-
       <hr class="tb-divider"/>
-
       <!-- ENGLISH -->
       <h3>🇬🇧 Terms of Use</h3>
       <p>By using this tool, you agree to the following terms:</p>
@@ -518,7 +597,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <li>We are not liable for undetected sensitive data (false negatives) or incorrectly removed content (false positives).</li>
       </ul>
     </div>
-
     <div class="tb-footer">
       <button id="terms-accept" onclick="acceptTerms()">
         ✓ &nbsp;Acepto los términos · I accept the terms
@@ -527,8 +605,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     </div>
   </div>
 </div>
-
-
 <!-- ══════════════════ HEADER ══════════════════ -->
 <header class="site-header">
   <div class="container header-inner">
@@ -542,7 +618,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
       <span class="logo-name">SanitAI</span>
       <span class="logo-badge">v20</span>
     </a>
-
     <!-- Right side -->
     <div style="display:flex;align-items:center;gap:12px">
       <!-- Score strip -->
@@ -568,7 +643,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     </div>
   </div>
 </header>
-
 <!-- ══════════════════ HERO ══════════════════ -->
 <section style="background:var(--surface);border-bottom:1px solid var(--border)">
   <div class="container" style="padding-top:32px;padding-bottom:32px">
@@ -585,15 +659,12 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     </p>
   </div>
 </section>
-
 <!-- ══════════════════ MAIN TOOL ══════════════════ -->
 <main>
 <div class="container" style="padding-top:32px;padding-bottom:48px">
 <div style="display:grid;grid-template-columns:1fr;gap:20px" id="main-grid">
-
   <!-- ── LEFT COLUMN ── -->
   <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
-
     <!-- Tab + Mode row -->
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div class="tab-group">
@@ -608,7 +679,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         </div>
       </div>
     </div>
-
     <!-- Text panel -->
     <div id="panel-text">
       <div class="card">
@@ -621,7 +691,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         ></textarea>
       </div>
     </div>
-
     <!-- File panel -->
     <div id="panel-file" class="hidden">
       <div class="card">
@@ -651,7 +720,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         </div>
       </div>
     </div>
-
     <!-- Rules grid -->
     <div class="card">
       <div class="card-header">
@@ -669,7 +737,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <div id="paranoid-rules-grid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
       </div>
     </div>
-
     <!-- Action buttons -->
     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
       <button class="btn btn-primary" onclick="runCleaner()" id="btn-clean" data-i18n="sanitize_button">
@@ -698,7 +765,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <span data-i18n="processing">Procesando…</span>
       </span>
     </div>
-
     <!-- Output panel -->
     <div id="output-panel" style="display:none" class="card fade-in">
       <div class="card-header" style="flex-wrap:wrap;gap:8px">
@@ -719,7 +785,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
       </div>
       <div id="output-preview"></div>
     </div>
-
     <!-- Detection log -->
     <div id="detection-log" style="display:none" class="card fade-in">
       <div class="card-header">
@@ -728,16 +793,12 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
       </div>
       <div id="log-items" style="padding:8px;display:flex;flex-direction:column;gap:2px;max-height:300px;overflow-y:auto"></div>
     </div>
-
   </div><!-- end LEFT -->
-
   <!-- ── RIGHT SIDEBAR ── -->
   <div id="right-sidebar" style="display:flex;flex-direction:column;gap:16px">
-
     <!-- Session stats card -->
     <div class="card" style="padding:20px">
       <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:14px" data-i18n="session_label">Resumen de sesión</p>
-
       <!-- Shield + protected count -->
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
         <div style="width:40px;height:40px;background:var(--accent-lt);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
@@ -750,7 +811,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
           </div>
         </div>
       </div>
-
       <!-- Privacy score -->
       <div style="margin-bottom:16px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -761,7 +821,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
           <div class="score-fill" id="score-bar-2" style="width:100%;background:var(--success)"></div>
         </div>
       </div>
-
       <!-- Mini stats -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div class="stat-box">
@@ -781,11 +840,9 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
           <div class="stat-lbl" data-i18n="categories_label">categorías</div>
         </div>
       </div>
-
       <!-- Breakdown bars -->
       <div id="stats-breakdown" style="margin-top:12px;display:flex;flex-direction:column;gap:5px"></div>
     </div>
-
     <!-- Coverage card -->
     <div class="card" style="padding:16px 20px">
       <p style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-4);margin-bottom:12px" data-i18n="coverage_label">Cobertura</p>
@@ -804,13 +861,10 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <div class="cover-row" style="color:var(--warn)"><span data-i18n="cov_urls">🔗 URLs con credenciales</span><span class="cover-plus">+ paranoico</span></div>
       </div>
     </div>
-
   </div><!-- end RIGHT -->
-
 </div><!-- end main-grid -->
 </div><!-- end container -->
 </main>
-
 <!-- ══════════════════ BENEFITS SECTION ══════════════════ -->
 <section style="background:var(--bg-2);border-top:1px solid var(--border);padding:48px 0">
   <div class="container">
@@ -842,7 +896,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     </div>
   </div>
 </section>
-
 <!-- ══════════════════ FAQ ══════════════════ -->
 <section style="padding:56px 0;background:var(--bg)">
   <div class="container" style="max-width:720px">
@@ -852,12 +905,10 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     <div id="faq-list"></div>
   </div>
 </section>
-
 <!-- ══════════════════ POLICIES ══════════════════ -->
 <section style="padding:40px 0 64px;background:var(--bg)">
   <div class="container" style="max-width:720px">
     <h2 class="section-title" style="margin-bottom:20px" data-i18n="legal_title">Legal</h2>
-
     <details class="policy-details">
       <summary class="policy-summary">
         <span>📄 Política de Privacidad</span>
@@ -882,7 +933,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <p>Dado que no tratamos datos personales, no aplican los derechos ARCO. Si tienes dudas sobre el funcionamiento de la herramienta, puedes inspeccionarla directamente ya que el código fuente es público y está disponible en el archivo HTML.</p>
       </div>
     </details>
-
     <details class="policy-details">
       <summary class="policy-summary">
         <span>📋 Términos de Servicio</span>
@@ -910,7 +960,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <p>Estos términos se rigen por la legislación española y de la Unión Europea. Cualquier disputa se someterá a los tribunales competentes de España.</p>
       </div>
     </details>
-
     <details class="policy-details">
       <summary class="policy-summary">
         <span>🍪 Política de Cookies</span>
@@ -933,10 +982,8 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
         <p>Puedes usar esta herramienta descargando el archivo HTML y abriéndolo localmente en tu navegador, evitando cualquier petición externa. Así tendrás garantía total de privacidad.</p>
       </div>
     </details>
-
   </div>
 </section>
-
 <!-- ══════════════════ FOOTER ══════════════════ -->
 <footer>
   <div class="container">
@@ -979,7 +1026,6 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
     </div>
   </div>
 </footer>
-
 <!-- ══════════════════ SCHEMA FAQ ══════════════════ -->
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
@@ -989,47 +1035,30 @@ footer{background:var(--surface-2);border-top:1px solid var(--border);margin-top
   {"@type":"Question","name":"¿Viola GDPR usar ChatGPT con datos de empleados?","acceptedAnswer":{"@type":"Answer","text":"Potencialmente sí. El Artículo 28 GDPR exige DPA firmado con cada subprocesador. Enviar datos personales sin ese acuerdo puede suponer multas de hasta el 4% del volumen global o 20M€."}}
 ]}
 </script>
-
 <!-- Engine -->
 <script>
-
 'use strict';
-
-// ═══════════════════════════════════════════════════════════════
-// § 1 — SHADOW NORMALIZATION ENGINE
-// ═══════════════════════════════════════════════════════════════
-// Construye una copia "limpia" del texto original eliminando técnicas
-// Devuelve el shadow text + un mapa de posiciones shadow→original.
-//
-//   [dot] / (dot) / &#46; → .  (punto ofuscado)
-//   Secuencias `\d[\s,]\d` en contexto numérico → colapso de separadores
-//   (IPs con comas: 192,168,1,1 → detectadas por ip_loose rule)
-// ───────────────────────────────────────────────────────────────
 function buildShadow(original) {
   const shadow = [];
-  const toOrig = [];  // toOrig[shadowIndex] = originalIndex
+  const toOrig = [];
   let i = 0;
-
-  // Substitution table: [matchStr(lowercase), outputChar]
   const SUBS = [
     ['[at]',   '@'],
     ['(at)',   '@'],
     ['&#64;',  '@'],
-    [' at ',   '@'],   // "user at gmail" — solo entre palabras, no al inicio/fin
-    [' arroba ', '@'], // v6.1 — lenguaje natural español: "usuario arroba gmail"
+    [' at ',   '@'],
+    [' arroba ', '@'],
     ['[dot]',  '.'],
     ['(dot)',  '.'],
     ['&#46;',  '.'],
     [' dot ',  '.'],
-    [' punto ', '.'], // v6.1 — lenguaje natural español: "gmail punto com"
+    [' punto ', '.'],
   ];
-
   while (i < original.length) {
     let matched = false;
     for (const [pat, rep] of SUBS) {
       const sl = original.slice(i, i + pat.length).toLowerCase();
       if (sl === pat) {
-        // Map each char of the replacement to the start of the pattern in original
         for (let c = 0; c < rep.length; c++) {
           shadow.push(rep[c]);
           toOrig.push(i);
@@ -1045,25 +1074,13 @@ function buildShadow(original) {
       i++;
     }
   }
-
   return { shadow: shadow.join(''), toOrig };
 }
-
-// Post-normalización del shadow: colapsa espacios alrededor de @ y . para que
-// los emails ofuscados como "user @ gmail . com" sean matcheables por el regex estándar.
 function collapseShadow(s) {
   return s
-    .replace(/\s+@\s+/g, '@')   // "user @ gmail" → "user@gmail"
-    .replace(/(\w)\s+\.\s+(\w)/g, '$1.$2'); // "gmail . com" → "gmail.com"
+    .replace(/\s+@\s+/g, '@')
+    .replace(/(\w)\s+\.\s+(\w)/g, '$1.$2');
 }
-
-// ═══════════════════════════════════════════════════════════════
-// § 2 — SHANNON ENTROPY (para detección de high-entropy strings)
-// ═══════════════════════════════════════════════════════════════
-// Una API key aleatoria de 32 chars tiene ~4.5 bits/char.
-// Una palabra en inglés normal tiene ~2.5-3.0 bits/char.
-// Umbral conservador: ≥3.8 bits/char (evita false positives en texto normal).
-// ───────────────────────────────────────────────────────────────
 function shannonEntropy(str) {
   if (!str || str.length < 2) return 0;
   const freq = {};
@@ -1074,75 +1091,44 @@ function shannonEntropy(str) {
     return acc + p * Math.log2(p);
   }, 0);
 }
-
-// ═══════════════════════════════════════════════════════════════
-// § 3 — REGLAS DEL MOTOR v6
-// ═══════════════════════════════════════════════════════════════
-
-// ─────────────────────────────────────────────────────
-// BASIC RULES — corren siempre
-// ─────────────────────────────────────────────────────
 const BASIC_RULES = [
-
-  // ── EMAIL — patrón RFC 5321 (evita fragmentos de URL con @) ──
-  // SHADOW-AWARE: los emails ofuscados (user[at]domain[dot]com) se
-  // detectan via shadow pass en sanitize(). Esta regla captura los normales.
   {
     id:'email', label:'Email', group:'PII', sev:'critical',
     pattern:() => /(?<![\/\w])[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}(?!\.[a-zA-Z]{2,})/g,
     replacement:'[EMAIL]',
-    shadowAware: true,  // también se aplica sobre shadow text (collapsed)
+    shadowAware: true,
   },
-
-  // ── EMAIL OFUSCADO — regla directa sobre texto original ──────────────────
-  // Cubre: [at]/(at)/&#64;/" at "/" arroba " y [dot]/(dot)/&#46;/" dot "/" punto "
-  // v6.1: añadidos "arroba" y "punto" para lenguaje natural español.
   {
     id:'email_obf', label:'Email (ofuscado)', group:'PII', sev:'critical',
     pattern:() => /[a-zA-Z0-9._%+\-]+\s*(?:\[at\]|\(at\)|&#64;|(?<!\w)at(?!\w)|arroba)\s*[a-zA-Z0-9.\-]+\s*(?:\[dot\]|\(dot\)|&#46;|(?<!\w)dot(?!\w)|punto)\s*[a-zA-Z]{2,}/gi,
     replacement:'[EMAIL]',
   },
-
-  // ── TELÉFONO ES — móvil 6xx/7xx + fijo 8xx/9xx con separadores variables ──
-  // (postFilter rechaza si hay ≥3 puntos consecutivos entre dígitos = IP).
   {
     id:'phone_es', label:'Teléfono ES', group:'PII', sev:'high',
     pattern:() => /(?:(?:\+|00)34[\s.\-]?)?([6789](\d[\s.\-]?){8})\b/g,
     replacement:(m) => {
-      if ((m.match(/\./g) || []).length >= 3) return m;  // rechazar IPs
+      if ((m.match(/\./g) || []).length >= 3) return m;
       const d = m.replace(/\D/g,'');
       return (d.length===9||d.length===11||d.length===12) ? '[TELEFONO]' : m;
     },
   },
-
-  // ── TELÉFONO CONTEXTUAL — tras label explícito ──
   {
     id:'phone_ctx', label:'Teléfono (contexto)', group:'PII', sev:'high',
     pattern:() => /(?:tel(?:é?fono)?|phone|móvil|mobile|fax)\s*[:\-]?\s*(\+?[\d][\d\s.\-]{7,15})/gi,
     replacement:(m,p1) => m.replace(p1,'[TELEFONO]'),
-    _enabled: false,  // off por defecto para evitar double-count
+    _enabled: false,
   },
-
-  // ── DNI / NIE ──
   {
     id:'dni_nie', label:'DNI / NIE', group:'Documentos', sev:'critical',
     pattern:() => /\b([0-9]{8}[A-Z]|[XYZ][0-9]{7}[A-Z])\b/gi,
     replacement:'[DNI_NIE]',
   },
-
-  // ── IBAN ES — soporta espaciado estándar, guiones y formatos mixtos (v6.1) ──
-  // postFilter valida exactamente 22 dígitos (2 control + 20 cuenta).
   {
     id:'iban', label:'IBAN (ES)', group:'Finanzas', sev:'critical',
     pattern:() => /\bES\d{2}[\d\s\-]{20,34}\b/g,
     postFilter:(m) => m.replace(/[^0-9]/g,'').length === 22 ? m : null,
     replacement:'[IBAN]',
   },
-
-  // ── IBAN SIN PREFIJO — NUEVO EN v6 ──────────────────────────────────────
-  // Detecta secuencias de 20-24 dígitos en contexto financiero explícito.
-  // Permite texto extra entre keyword y número: "cuenta (sin prefijo): 2100..."
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'iban_raw', label:'IBAN sin prefijo', group:'Finanzas', sev:'critical',
     pattern:() => /(?:iban|n[úu]mero de cuenta|cuenta bancaria|cuenta|no\.?\s*cuenta)[^:\n]{0,40}:?\s*((?:\d{4}[\s\-]?){4,6}\d{0,4})/gi,
@@ -1152,17 +1138,11 @@ const BASIC_RULES = [
       return m.replace(p1, '[IBAN]');
     },
   },
-
-  // ── IPv4 ESTÁNDAR — dígitos separados por puntos ──
   {
     id:'ipv4', label:'IPv4', group:'Infraestructura', sev:'medium',
     pattern:() => /\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b/g,
     replacement:'[IP]',
   },
-
-  // ── IPv4 CON COMAS O ESPACIOS — NUEVO EN v6 ────────────────────────────
-  // El postFilter rechaza si algún octeto > 255 (evita false positives).
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'ip_loose', label:'IPv4 (comas/espacios)', group:'Infraestructura', sev:'medium',
     pattern:() => /\b(\d{1,3})[,\s](\d{1,3})[,\s](\d{1,3})[,\s](\d{1,3})\b/g,
@@ -1172,8 +1152,6 @@ const BASIC_RULES = [
     },
     replacement:'[IP]',
   },
-
-  // ── CREDIT CARD 13-19 dígitos con separadores flexibles ──
   {
     id:'credit_card', label:'Tarjeta crédito', group:'Finanzas', sev:'critical',
     pattern:() => /\b(?:\d[ \t\-]*?){13,19}\b/g,
@@ -1183,144 +1161,77 @@ const BASIC_RULES = [
     },
     replacement:'[TARJETA]',
   },
-
-  // ── OpenAI API Key ──
   {
     id:'openai_key', label:'OpenAI Key', group:'API Keys', sev:'critical',
     pattern:() => /(sk-(?:proj-)?[a-zA-Z0-9]{32,})/g,
     replacement:'[OPENAI_KEY]',
   },
-
-  // ── AWS Access Key ID ──────────────────────────────────────────────────
-  // prueba/staging que usan longitudes no estándar. La regla high_entropy
-  // (en PARANOID_RULES) detecta el caso extremo "sin prefijo AKIA".
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'aws_key', label:'AWS Key', group:'API Keys', sev:'critical',
     pattern:() => /\bAKIA[0-9A-Z]{16,20}\b/g,
     replacement:'[AWS_KEY]',
   },
-
-  // ── GCP / Google API Key ──
   {
     id:'gcp_key', label:'GCP Key', group:'API Keys', sev:'critical',
     pattern:() => /\bAIza[0-9A-Za-z\-_]{35}\b/g,
     replacement:'[GCP_KEY]',
   },
-
-  // ── GitHub Personal Access Token ──
   {
     id:'github_token', label:'GitHub Token', group:'API Keys', sev:'critical',
     pattern:() => /\bghp_[a-zA-Z0-9]{36}\b/g,
     replacement:'[GITHUB_TOKEN]',
   },
-
-  // ── SSH Private Key block ──
   {
     id:'ssh_block', label:'SSH Private Key', group:'API Keys', sev:'critical',
     pattern:() => /-----BEGIN (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (?:RSA |DSA |EC |OPENSSH )?PRIVATE KEY-----/gi,
     replacement:'[SSH_PRIVATE_KEY]',
   },
-
-  // ── PGP Private Key block ──
   {
     id:'pgp_block', label:'PGP Key', group:'API Keys', sev:'critical',
     pattern:() => /-----BEGIN PGP PRIVATE KEY BLOCK-----[\s\S]*?-----END PGP PRIVATE KEY BLOCK-----/gi,
     replacement:'[PGP_PRIVATE_KEY]',
   },
-
-  // ── JWT Token ──
   {
     id:'jwt', label:'JWT Token', group:'API Keys', sev:'critical',
     pattern:() => /\beyJ[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\.[a-zA-Z0-9_\-]+\b/g,
     replacement:'[JWT]',
   },
-
-  // ── CREDENCIALES CONTEXTUALES — MEJORADO EN v6 ──────────────────────────
-  //   1. \w* tras keyword: permite sufijos "_acceso", "_id", "_secret" etc.
-  //      (token_acceso, session_id, api-key, db_password → todos detectados)
-  //   2. Multilinea hasta 50 chars: el valor puede estar en la línea siguiente.
-  //      Ejemplo: "password:\n  SuperSecret" → ahora detectado.
-  //   3. (?!\[): evita re-detectar tokens ya censurados como [OPENAI_KEY].
-  //   4. Lookahead al final (?=...) evita consumir caracteres de cierre
-  //      como ), ", ', que pertenecen a la estructura del código/texto.
-  // ────────────────────────────────────────────────────────────────────────
-  // ── CREDENCIALES CONTEXTUALES v6.2 — FIXED in v7.1 ────────────────────────
-  // BUG anterior: ['"]?…[^\s"']+ excluía comillas del valor capturado →
-  //   db_password: "SuperSecret!" producía [CREDENTIAL] "SuperSecret!" (fuga).
-  //
-  // SOLUCIÓN: tres ramas alternativas para el valor:
-  //   1. "valor"  → comillas dobles (cualquier char excepto ")
-  //   2. 'valor'  → comillas simples (cualquier char excepto ')
-  //   3. valor    → sin comillas (sin espacios ni delimitadores)
-  // El replacement devuelve '[CREDENTIAL]' COMPLETO (keyword + separador + valor)
-  // sin llamar a m.replace() parcial que dejaba el valor visible.
-  // ────────────────────────────────────────────────────────────────────────────
   {
     id:'ctx_creds', label:'Credenciales (contexto)', group:'API Keys', sev:'high',
     pattern:() => /(?:api[_\-]?key|access[_\-]?token|auth[_\-]?token|password|passwd|contraseña|session_id|secret|clave|pass|token|auth|key)\w*\s*['"]?\s*[:=]\s*(?:"[^"\n]{1,200}"|'[^'\n]{1,200}'|(?!\[)[^\s"'`(),;\n\r]{4,200})/gi,
     replacement: '[CREDENTIAL]',
   },
-
-  // ── Rutas Unix/Mac con username ──
   {
     id:'path_unix', label:'Ruta Unix/Mac', group:'Sistema', sev:'medium',
     pattern:() => /\/(?:home|Users|root)\/([^/\s"'`,;\n,]{1,60})(?:\/[^\s"'`,;\n]*)?/g,
     replacement:'/home/[USER]',
   },
-
-  // ── Rutas Windows con username ──
   {
     id:'path_win', label:'Ruta Windows', group:'Sistema', sev:'medium',
     pattern:() => /[A-Z]:\\(?:Users|Documents and Settings)\\([^\\"\n,]{1,60})(?:\\[^\n"]*)?/gi,
     replacement:'C:\\Users\\[USER]',
   },
-
-  // ── Rutas sistema genéricas ──
   {
     id:'path_sys', label:'Ruta sistema', group:'Sistema', sev:'low',
     pattern:() => /\/(?:etc|var|usr|opt|srv|tmp|proc|dev)\/[^\s"'`,;\n,]{3,}/g,
     replacement:'[SYSPATH]',
     _enabled: false,
   },
-
-  // ── BTC wallets ──
   {
     id:'btc', label:'BTC Wallet', group:'Finanzas', sev:'high',
     pattern:() => /\b(?:bc1[a-zA-HJ-NP-Z0-9]{25,39}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})\b/g,
     replacement:'[BTC_WALLET]',
   },
-
-  // ── ETH wallets ──
   {
     id:'eth', label:'ETH Wallet', group:'Finanzas', sev:'high',
     pattern:() => /\b0x[a-fA-F0-9]{40}\b/g,
     replacement:'[ETH_WALLET]',
   },
 ];
-
-// ─────────────────────────────────────────────────────
-// PARANOID RULES — solo en modo Paranoico
-// ─────────────────────────────────────────────────────
 const PARANOID_RULES = [
-
-  // ── NOMBRES PROPIOS — REESCRITO EN v6 con Stop Words ─────────────────────
-  // PROBLEMA (v4/v5): palabras como "Para", "Aquí", "Nota", "El", "La"
-  // se marcaban como nombres propios generando falsos positivos masivos.
-  //
-  // SOLUCIÓN v6 — tres capas de protección:
-  //   1. Stop Words: lista de palabras comunes españolas/inglesas que NUNCA
-  //      se censuran aunque tengan mayúscula inicial.
-  //   2. Contexto: no se censura si el ctx previo es inicio de texto/línea
-  //      o si sigue a . ! ? ¡ ¿ : (fin/inicio de oración).
-  //   3. Longitud mínima: ≥3 chars para evitar iniciales y abreviaturas.
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'proper_nouns', label:'Nombres propios', group:'Paranoico', sev:'low',
-    // Stop Words: palabras con mayúscula que NO son nombres propios.
-    // Incluye pronombres, preposiciones, conjunciones, saludos comunes.
     _stopWords: new Set([
-      // ES
       'El','La','Los','Las','Un','Una','Unos','Unas',
       'Para','Por','De','Del','Con','Sin','En','Al','A',
       'Que','Y','O','Pero','Si','No','Ni','Más','Muy',
@@ -1335,7 +1246,6 @@ const PARANOID_RULES = [
       'Poco','Poca','Bien','Mal','Así',
       'Cuando','Donde','Como','Porque','Aunque',
       'Primero','Segundo','Tercero','Primero',
-      // EN
       'Hello','Dear','From','To','The','A','An',
       'This','That','These','Those','With','Without',
       'Please','Thanks','Regards','Best','Note',
@@ -1343,87 +1253,50 @@ const PARANOID_RULES = [
       'All','Some','Many','Much','Very','Well',
     ]),
     pattern:() => /((?:[.!?¡¿:]\s+)|(?:^|[\r\n]+)\s*|(?:[ \t]+))([A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]{2,}(?:[ \t]+[A-ZÁÉÍÓÚÜÑ][a-záéíóúüñ]{2,}){0,3})/gm,
-    replacement: null,  // función dinámica — se asigna en initRules()
+    replacement: null,
   },
-
-  // ── MAC Address ──
   {
     id:'mac', label:'MAC Address', group:'Paranoico', sev:'medium',
     pattern:() => /\b(?:[0-9a-fA-F]{2}[:\-]){5}[0-9a-fA-F]{2}\b/g,
     replacement:'[MAC]',
   },
-
-  // ── URLs con credenciales embebidas ──
   {
     id:'url_creds', label:'URL con credenciales', group:'Paranoico', sev:'critical',
     pattern:() => /(?:https?|ftp):\/\/[^:@\s/]+:[^@\s/]+@[^\s"']*/gi,
     replacement:'[URL_CREDENCIALES]',
   },
-
-  // ── Hashes (MD5 / SHA1 / SHA256) ──
   {
     id:'hash', label:'Hash (MD5/SHA)', group:'Paranoico', sev:'low',
     pattern:() => /\b(?:[a-f0-9]{32}|[a-f0-9]{40}|[a-f0-9]{64})\b/gi,
     replacement:'[HASH]',
   },
-
-  // ── Docker digest ──
   {
     id:'docker_sha', label:'Docker digest', group:'Paranoico', sev:'low',
     pattern:() => /\bsha256:[a-f0-9]{64}\b/gi,
     replacement:'[DOCKER_DIGEST]',
   },
-
-  // ── Variables de fichero .env ──
   {
     id:'env_var', label:'Variable .env', group:'Paranoico', sev:'high',
     pattern:() => /^([A-Z_][A-Z0-9_]{2,50})\s*=\s*(.{1,200})$/gm,
     replacement:(m,k,v) => `${k}=[VALOR_REDACTADO]`,
   },
-
-  // ── Social handles ──
   {
     id:'social', label:'@handle', group:'Paranoico', sev:'low',
     pattern:() => /(?<![a-zA-Z0-9])@[a-zA-Z][a-zA-Z0-9_]{2,29}\b/g,
     replacement:'@[HANDLE]',
     _enabled: false,
   },
-
-  // ── HIGH ENTROPY STRINGS — NUEVO EN v6 ───────────────────────────────────
-  // prefijo reconocible (ej: un token Bearer de 40 chars aleatorios).
-  // Esta regla detecta cualquier string alfanumérico de ≥20 chars que
-  // tenga entropía Shannon >3.8 bits/char (umbral calibrado para minimizar
-  // false positives en texto normal, URLs y base64 corto).
-  //
-  // La regla NO corre sobre shadow — opera directamente sobre el original
-  // DESPUÉS de que las otras reglas hayan ya censurado keys conocidas,
-  // evitando así marcar "[OPENAI_KEY]" como high-entropy.
-  //
-  // Cobertura: Bearer tokens, Stripe keys (sk_live_...), tokens genéricos,
-  // contraseñas de 20+ chars, secrets de CI/CD sin nombre reconocible.
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'high_entropy', label:'Token alta entropía', group:'Paranoico', sev:'high',
     pattern:() => /\b[a-zA-Z0-9_\-]{20,}\b/g,
     postFilter:(m) => {
-      // Rechazar si ya es un token [PLACEHOLDER]
       if (/^\[/.test(m)) return null;
-      // Rechazar palabras comunes (todo minúsculas sin dígitos = texto normal)
       if (/^[a-z]+$/.test(m) || /^[A-Z][a-z]+$/.test(m)) return null;
-      // Rechazar si parece una URL o dominio
       if (/\.(com|es|org|net|io|dev)/.test(m)) return null;
-      // Entropía: ≥3.8 bits/char = claramente aleatorio
       return shannonEntropy(m) >= 3.8 ? m : null;
     },
     replacement:'[TOKEN_ALTA_ENTROPIA]',
   },
-
-  // ── IBAN sin prefijo (modo Paranoico) — extiende la regla básica ──────────
-  // En Básico: solo detecta si hay keyword "IBAN" o "cuenta" explícito.
-  // En Paranoico: detecta cualquier secuencia de 20-24 dígitos (con o sin
-  // espacios en grupos de 4) que no sea ya un número de tarjeta.
-  // El postFilter valida longitud exacta 20, 22 ó 24 dígitos.
-  // ────────────────────────────────────────────────────────────────────────
   {
     id:'iban_paranoid', label:'Secuencia bancaria', group:'Paranoico', sev:'high',
     pattern:() => /\b(?:\d{4}[\s\-]?){5,6}\b/g,
@@ -1434,98 +1307,64 @@ const PARANOID_RULES = [
     replacement:'[IBAN]',
   },
 ];
-
-
-// ═══════════════════════════════════════════════════════════════
-// § INTERNATIONAL RULES — añadidas en v11 (NO modifican reglas existentes)
-// ═══════════════════════════════════════════════════════════════
-
-// ─── 5.1 US Phone  +1 (555) 123-4567 / +15551234567
 BASIC_RULES.push({
   id:'phone_us', label:'Phone (US)', group:'PII', sev:'high',
   pattern:() => /\+1\s?\(?\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}\b/g,
   replacement:'[TELEFONO]',
 });
-
-// ─── 5.2 UK Phone  +44 7911 123456  /  07911 123456
 BASIC_RULES.push({
   id:'phone_uk', label:'Phone (UK)', group:'PII', sev:'high',
   pattern:() => /(?:\+44\s?\d{4}\s?\d{6}|0\d{4}\s?\d{6})\b/g,
   replacement:'[TELEFONO]',
 });
-
-// ─── 5.3 Generic international  +52 55 1234 5678  /  +55 11 98765-4321
 BASIC_RULES.push({
   id:'phone_intl', label:'Phone (Intl)', group:'PII', sev:'high',
   pattern:() => /\+\d{2,3}[\s.\-]?\d{2,4}[\s.\-]?\d{3,4}[\s.\-]?\d{3,4}\b/g,
   replacement:(m) => {
-    // Avoid overlapping with ES rule (+34) — skip if already handled
     if (/^\+34/.test(m)) return m;
     const d = m.replace(/\D/g,'');
     return (d.length >= 10 && d.length <= 15) ? '[TELEFONO]' : m;
   },
 });
-
-// ─── 5.4 International IBAN (non-ES)
-// Format: CC99 + 10–30 alphanumeric — postFilter excludes ES (already handled)
 BASIC_RULES.push({
   id:'iban_intl', label:'IBAN (Intl)', group:'Finanzas', sev:'critical',
   pattern:() => /\b([A-Z]{2})\d{2}[A-Z0-9 ]{10,30}\b/g,
   postFilter:(m) => {
-    if (/^ES/.test(m)) return null;          // ES handled by iban rule
+    if (/^ES/.test(m)) return null;
     const digits = m.replace(/[^0-9]/g,'');
     return digits.length >= 10 ? m : null;
   },
   replacement:'[IBAN]',
 });
-
-// ─── 5.5 IPv6  2001:0db8:85a3:0000:0000:8a2e:0370:7334
 BASIC_RULES.push({
   id:'ipv6', label:'IPv6', group:'Infraestructura', sev:'medium',
   pattern:() => /\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b/g,
   replacement:'[IP]',
 });
-
-// ─── 5.6 English credential keywords (extends ctx_creds coverage via new rule)
-// Separate rule: bearer tokens, authorization headers, passcode
 BASIC_RULES.push({
   id:'ctx_creds_en', label:'Credentials (EN)', group:'API Keys', sev:'high',
   pattern:() => /(?:\w+_)?(?:passcode|passphrase|access_token|refresh_token|client_secret|private_key|api_?key|apikey|bearer|authorization)(?:_\w+)*\s*['"]?\s*[:=]\s*(?:"[^"\n]*"|'[^'\n]*'|(?!\[)[^\s"'\n,;)]{4,})/gi,
   replacement:'[CREDENTIAL]',
 });
-
-// ═══════════════════════════════════════════════════════════════
-// § 4 — INICIALIZACIÓN DE REGLAS
-// ═══════════════════════════════════════════════════════════════
 function initRules() {
-  // Asignar la función de reemplazo de proper_nouns (necesita referencia a _stopWords)
   const pnRule = PARANOID_RULES.find(r => r.id === 'proper_nouns');
   if (pnRule) {
     const sw = pnRule._stopWords;
     pnRule.replacement = (match, ctx, name) => {
-      // Condición 1: ¿es inicio de texto, línea, o tras puntuación?
       const isSentenceStart = /[.!?¡¿:]/.test(ctx) || ctx === '' || /[\r\n]/.test(ctx);
       if (isSentenceStart) return match;
-      // Condición 2: ¿está en la Stop Words list?
       const firstWord = name.split(/\s+/)[0];
       if (sw.has(firstWord)) return match;
       return ctx + '[NOMBRE]';
     };
   }
-
-  // Flags de activación por defecto
   const defaultOff = new Set(['phone_ctx', 'path_sys', 'social']);
   [...BASIC_RULES, ...PARANOID_RULES].forEach(r => {
-    if (r._enabled === false) return;  // explícitamente off
+    if (r._enabled === false) return;
     r._enabled = !defaultOff.has(r.id);
   });
 }
-
 initRules();
-
-// ═══════════════════════════════════════════════════════════════
-// § 5 — APP STATE
-// ═══════════════════════════════════════════════════════════════
 const state = {
   intensity:  'basic',
   fileType:   'text',
@@ -1538,42 +1377,12 @@ const state = {
     byCategory: {}, uniqueTypes: new Set(),
   },
 };
-
-// ═══════════════════════════════════════════════════════════════
-// § 6 — MOTOR DE DOBLE PASADA (CORE)
-// ═══════════════════════════════════════════════════════════════
-//
-// FLUJO:
-//   1. buildShadow(text) → { shadow, toOrig }
-//   2. Para cada regla con shadowAware:true → detectar en shadow,
-//      mapear posiciones a original via toOrig[], recopilar spans.
-//   3. Para cada regla (sobre texto progresivamente sanitizado):
-//      → detectar en texto ya parcialmente limpio (evita re-detección
-//        de tokens ya marcados).
-//   4. Aplicar todos los spans recopilados de mayor a menor índice
-//      (evita shift de posiciones al sustituir).
-//
-// NOTA sobre ctx_creds replacement:
-//   La función reemplaza solo el VALOR, preservando el keyword
-//   (password=, api-key:, etc.) para no destruir la legibilidad del log.
-// ───────────────────────────────────────────────────────────────
 function sanitize(text) {
-  // ── v6.1 — Pre-normalización Unicode ─────────────────────────────────────
-  // Normaliza caracteres Unicode equivalentes (ej: ＠ fullwidth → @, ａ → a)
-  // y elimina zero-width chars invisibles que rompen patrones regex.
-  // Cubre copias desde WhatsApp/Word/PDFs con smart quotes u homoglifos simples.
   text = text
     .normalize('NFKC')
-    .replace(/[\u200B-\u200D\uFEFF]/g, '')   // zero-width chars
-    .replace(/[\u2018\u2019]/g, "'")          // v6.1: smart single quotes → '
-    .replace(/[\u201C\u201D]/g, '"');         // v6.1: smart double quotes → "
-  // ─────────────────────────────────────────────────────────────────────────
-
-  // ── Paso 1: Shadow pass — DETECCIÓN PURA (no mapeo de posiciones) ──────────
-  // El motor de posiciones shadow→original era frágil tras el colapso de
-  // espacios (el collapse cambia longitudes, desalineando toOrig[]).
-  // Solución: la shadow pass solo detecta SI hay emails ofuscados;
-  // la SUSTITUCIÓN la realiza email_obf sobre el texto original directamente.
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"');
   const { shadow: rawShadow } = buildShadow(text);
   const shadow = collapseShadow(rawShadow);
   let shadowEmailCount = 0;
@@ -1583,30 +1392,21 @@ function sanitize(text) {
     const normalMatches = [...text.matchAll(/(?<![\/\w])[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/g)].length;
     shadowEmailCount = Math.max(0, shadowMatches - normalMatches);
   }
-
   let out = text;
   const detections = [];
-
-  // Reportar emails ofuscados detectados por shadow (sustituidos por email_obf rule)
   if (shadowEmailCount > 0) {
     detections.push({
       id:'email_shadow', label:'Email (bypass detectado)', group:'PII', sev:'critical',
       count: shadowEmailCount, samples:['[ofuscación [at]/[dot]]'],
     });
   }
-
-  // ── Paso 2: Reglas principales sobre texto original ──────────────────────
   const rules = state.intensity === 'paranoid'
     ? [...BASIC_RULES, ...PARANOID_RULES]
     : BASIC_RULES;
-
   const enabledRules = rules.filter(r => r._enabled);
-
   for (const rule of enabledRules) {
     const re = rule.pattern();
     re.lastIndex = 0;
-
-    // Dry-run: contar matches reales respetando postFilter y fn replacement
     const matches = [];
     let m;
     const scanRe = new RegExp(re.source, re.flags);
@@ -1619,8 +1419,6 @@ function sanitize(text) {
       matches.push(m[0]);
     }
     if (!matches.length) continue;
-
-    // Aplicar sustitución
     const replRe = new RegExp(re.source, re.flags);
     if (typeof rule.replacement === 'function') {
       out = out.replace(replRe, rule.replacement);
@@ -1629,7 +1427,6 @@ function sanitize(text) {
     } else {
       out = out.replace(replRe, rule.replacement);
     }
-
     detections.push({
       id:      rule.id,
       label:   rule.label,
@@ -1639,25 +1436,13 @@ function sanitize(text) {
       samples: matches.slice(0, 2),
     });
   }
-
   return { output: out, detections };
 }
-
-// ─────────────────────────────────────────────────────
-// Privacy Score v11 — token-type weights
-// ─────────────────────────────────────────────────────
-// Pesos por tipo de token detectado:
-//   CREDENTIAL/IBAN/TARJETA → 5  (datos financieros y accesos)
-//   EMAIL/TELEFONO           → 2  (PII identificativo)
-//   IP                       → 1  (infraestructura)
-// score = max(0, 100 - total_weight * 5)
 const TOKEN_WEIGHTS = {
   CREDENTIAL:5, IBAN:5, TARJETA:5,
   EMAIL:2, TELEFONO:2,
   IP:1,
 };
-
-// Map rule.id → token type for weight lookup
 const RULE_TOKEN_MAP = {
   email:'EMAIL', email_obf:'EMAIL', email_shadow:'EMAIL',
   phone_es:'TELEFONO', phone_ctx:'TELEFONO',
@@ -1668,7 +1453,6 @@ const RULE_TOKEN_MAP = {
   pgp_block:'CREDENTIAL', jwt:'CREDENTIAL', env_var:'CREDENTIAL',
   ipv4:'IP', ip_loose:'IP',
 };
-
 function computeScore(detections, textLen) {
   if (!detections.length) return 100;
   const totalWeight = detections.reduce((a,d) => {
@@ -1678,231 +1462,109 @@ function computeScore(detections, textLen) {
   }, 0);
   return Math.max(0, 100 - totalWeight * 5);
 }
-
-// 🟢 Seguro/Safe · 🟡 Revisar/Review · 🔴 Riesgo alto/High risk
 function riskLabel(score) {
   if (score >= 80) return { text: t('safe'),    cls:'risk-safe' };
   if (score >= 50) return { text: t('warning'), cls:'risk-warn' };
   return            { text: t('danger'),         cls:'risk-high' };
 }
-// ─────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────
-
-// ═══════════════════════════════════════════════════════════════
-// § i18n — Multi-language support (ES / EN)
-// ═══════════════════════════════════════════════════════════════
 const i18n = {
   es: {
-    title:             'Protector de privacidad para IA',
-    subtitle:          'Limpia tus prompts antes de enviarlos a la IA',
-    subtitle_sub:      'Detecta emails, contraseñas, IBANs, API keys y 20+ tipos de datos sensibles. Procesado 100% local, sin servidores.',
-    badge:             'GDPR · PCI DSS · 100% local',
-    input_label:       'Tu texto o prompt',
-    input_placeholder: 'Pega aquí tu texto, prompt, código o log…\n\n  javier@empresa.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  ES91 2100 0418 4502 0005 1332\n  password=s3cr3t!  ·  DNI: 12345678Z\n  192.168.1.100  ·  tel: 612 345 678',
-    clear_btn:         'Limpiar ✕',
-    file_label:        'Seleccionar archivo',
-    drop_text:         'Arrastra un archivo aquí',
-    drop_sub:          'o haz clic para seleccionarlo',
-    rules_label:       'Reglas activas',
-    enable_all:        'Activar todo',
-    disable_all:       'Desactivar',
-    paranoid_label:    'Modo Paranoico',
-    sanitize_button:   'Analizar y sanitizar',
-    copy_button:       'Copiar resultado',
-    download_button:   'Descargar',
-    reset_button:      'Limpiar',
-    example_button:    '⚡ Probar con ejemplo',
-    output_label:      'Resultado',
-    tab_sanitized:     'Sanitizado',
-    tab_original:      'Original',
-    tab_compare:       'Comparar',
-    detected_label:    'Datos detectados',
-    session_label:     'Resumen de sesión',
-    protected_label:   'datos protegidos',
-    score_label:       'Privacy Score',
-    findings_label:    'hallazgos',
-    scans_label:       'análisis',
-    files_label:       'archivos',
-    categories_label:  'categorías',
-    coverage_label:    'Cobertura',
-    safe:              '🟢 Seguro',
-    warning:           '🟡 Revisar',
-    danger:            '🔴 Riesgo alto',
-    processing:        'Procesando…',
-    copied:            '✓ copiado',
-    privacy_msg:       'Tus datos se procesan localmente en tu navegador',
-    faq_title:         'Preguntas frecuentes',
-    legal_title:       'Legal',
-    tab_text:          'Texto / Prompt',
-    tab_file:          'Archivo',
-    mode_basic:        'Básico',
-    mode_paranoid:     'Paranoico',
-    mode_label:        'Modo:',
-    // view tabs
-    // file
-    file_label:        'Seleccionar archivo',
-    drop_text:         'Arrastra un archivo aquí',
-    drop_sub:          'o haz clic para seleccionarlo',
-    // benefits section
-    benefits_title:    '¿Por qué sanitizar antes de usar IA?',
-    benefits_sub:      'Cada prompt enviado a ChatGPT, Claude o Gemini puede contener información que no quieres compartir con servidores externos.',
-    b1_title:          '100% en tu navegador',
-    b1_desc:           'Ningún dato sale de tu dispositivo. Sin servidores, sin base de datos, sin telemetría.',
-    b2_title:          'Cumplimiento GDPR',
-    b2_desc:           'Evita multas por transferir datos personales sin acuerdo de tratamiento firmado (DPA).',
-    b3_title:          '+20 tipos detectados',
-    b3_desc:           'Emails, IBANs, contraseñas, API keys, DNIs, IPs, rutas de sistema, wallets y más.',
-    b4_title:          'Soporta Excel y Word',
-    b4_desc:           'Limpia hojas de cálculo .xlsx y documentos .docx celda a celda, sin perder estructura.',
-    // footer
-    footer_tagline:    'Herramienta gratuita de privacidad.\n100% local · sin telemetría.',
-    footer_legal:      'Legal',
-    footer_privacy:    'Política de Privacidad',
-    footer_terms:      'Términos de Servicio',
-    footer_cookies:    'Política de Cookies',
-    footer_tool:       'Herramienta',
-    footer_faq_link:   'Preguntas frecuentes',
-    footer_try:        'Probar ejemplo',
-    footer_tech:       'Tecnología',
-    footer_copy:       '© 2025 SanitAI · Ningún dato sale de tu dispositivo.',
-    // hero
-    hero_badge:        'GDPR · PCI DSS · 100% local',
-    hero_version:      'SanitAI v20',
+    title:'Protector de privacidad para IA',subtitle:'Limpia tus prompts antes de enviarlos a la IA',
+    subtitle_sub:'Detecta emails, contraseñas, IBANs, API keys y 20+ tipos de datos sensibles. Procesado 100% local, sin servidores.',
+    badge:'GDPR · PCI DSS · 100% local',input_label:'Tu texto o prompt',
+    input_placeholder:'Pega aquí tu texto, prompt, código o log…\n\n  javier@empresa.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  ES91 2100 0418 4502 0005 1332\n  password=s3cr3t!  ·  DNI: 12345678Z\n  192.168.1.100  ·  tel: 612 345 678',
+    clear_btn:'Limpiar ✕',file_label:'Seleccionar archivo',drop_text:'Arrastra un archivo aquí',
+    drop_sub:'o haz clic para seleccionarlo',rules_label:'Reglas activas',enable_all:'Activar todo',
+    disable_all:'Desactivar',paranoid_label:'Modo Paranoico',sanitize_button:'Analizar y sanitizar',
+    copy_button:'Copiar resultado',download_button:'Descargar',reset_button:'Limpiar',
+    example_button:'⚡ Probar con ejemplo',output_label:'Resultado',tab_sanitized:'Sanitizado',
+    tab_original:'Original',tab_compare:'Comparar',detected_label:'Datos detectados',
+    session_label:'Resumen de sesión',protected_label:'datos protegidos',score_label:'Privacy Score',
+    findings_label:'hallazgos',scans_label:'análisis',files_label:'archivos',categories_label:'categorías',
+    coverage_label:'Cobertura',safe:'🟢 Seguro',warning:'🟡 Revisar',danger:'🔴 Riesgo alto',
+    processing:'Procesando…',copied:'✓ copiado',privacy_msg:'Tus datos se procesan localmente en tu navegador',
+    faq_title:'Preguntas frecuentes',legal_title:'Legal',tab_text:'Texto / Prompt',tab_file:'Archivo',
+    mode_basic:'Básico',mode_paranoid:'Paranoico',mode_label:'Modo:',
+    benefits_title:'¿Por qué sanitizar antes de usar IA?',
+    benefits_sub:'Cada prompt enviado a ChatGPT, Claude o Gemini puede contener información que no quieres compartir con servidores externos.',
+    b1_title:'100% en tu navegador',b1_desc:'Ningún dato sale de tu dispositivo. Sin servidores, sin base de datos, sin telemetría.',
+    b2_title:'Cumplimiento GDPR',b2_desc:'Evita multas por transferir datos personales sin acuerdo de tratamiento firmado (DPA).',
+    b3_title:'+20 tipos detectados',b3_desc:'Emails, IBANs, contraseñas, API keys, DNIs, IPs, rutas de sistema, wallets y más.',
+    b4_title:'Soporta Excel y Word',b4_desc:'Limpia hojas de cálculo .xlsx y documentos .docx celda a celda, sin perder estructura.',
+    footer_tagline:'Herramienta gratuita de privacidad.\n100% local · sin telemetría.',
+    footer_legal:'Legal',footer_privacy:'Política de Privacidad',footer_terms:'Términos de Servicio',
+    footer_cookies:'Política de Cookies',footer_tool:'Herramienta',footer_faq_link:'Preguntas frecuentes',
+    footer_try:'Probar ejemplo',footer_tech:'Tecnología',footer_copy:'© 2025 SanitAI · Ningún dato sale de tu dispositivo.',
+    hero_badge:'GDPR · PCI DSS · 100% local',hero_version:'SanitAI v20',
   },
   en: {
-    title:             'SanitAI',
-    subtitle:          'Clean your prompts before sending them to AI',
-    subtitle_sub:      'Detects emails, passwords, IBANs, API keys and 20+ types of sensitive data. 100% local processing, no servers.',
-    badge:             'GDPR · PCI DSS · 100% local',
-    input_label:       'Your text or prompt',
-    input_placeholder: 'Paste your text, prompt, code or log here…\n\n  user@company.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  GB29 NWBK 6016 1331 9268 19\n  password=s3cr3t!  ·  SSN: 123-45-6789\n  192.168.1.100  ·  tel: +1 555 123 4567',
-    clear_btn:         'Clear ✕',
-    file_label:        'Select file',
-    drop_text:         'Drag a file here',
-    drop_sub:          'or click to select',
-    rules_label:       'Active rules',
-    enable_all:        'Enable all',
-    disable_all:       'Disable all',
-    paranoid_label:    'Paranoid Mode',
-    sanitize_button:   'Analyze & sanitize',
-    copy_button:       'Copy result',
-    download_button:   'Download',
-    reset_button:      'Reset',
-    example_button:    '⚡ Try example',
-    output_label:      'Result',
-    tab_sanitized:     'Sanitized',
-    tab_original:      'Original',
-    tab_compare:       'Compare',
-    detected_label:    'Detected data',
-    session_label:     'Session summary',
-    protected_label:   'data protected',
-    score_label:       'Privacy Score',
-    findings_label:    'findings',
-    scans_label:       'scans',
-    files_label:       'files',
-    categories_label:  'categories',
-    coverage_label:    'Coverage',
-    safe:              '🟢 Safe',
-    warning:           '🟡 Review',
-    danger:            '🔴 High risk',
-    processing:        'Processing…',
-    copied:            '✓ copied',
-    privacy_msg:       'Your data is processed locally in your browser',
-    faq_title:         'FAQ',
-    legal_title:       'Legal',
-    tab_text:          'Text / Prompt',
-    tab_file:          'File',
-    mode_basic:        'Basic',
-    mode_paranoid:     'Paranoid',
-    mode_label:        'Mode:',
-    // view tabs
-    // file
-    file_label:        'Select file',
-    drop_text:         'Drag a file here',
-    drop_sub:          'or click to select',
-    // benefits section
-    benefits_title:    'Why sanitize before using AI?',
-    benefits_sub:      'Every prompt sent to ChatGPT, Claude or Gemini may contain information you don\'t want shared with external servers.',
-    b1_title:          '100% in your browser',
-    b1_desc:           'No data leaves your device. No servers, no database, no telemetry.',
-    b2_title:          'GDPR compliance',
-    b2_desc:           'Avoid fines for transferring personal data without a signed DPA.',
-    b3_title:          '20+ types detected',
-    b3_desc:           'Emails, IBANs, passwords, API keys, IDs, IPs, system paths, wallets and more.',
-    b4_title:          'Supports Excel and Word',
-    b4_desc:           'Cleans .xlsx and .docx files cell by cell, without losing structure.',
-    // footer
-    footer_tagline:    'Free privacy tool.\n100% local · no telemetry.',
-    footer_legal:      'Legal',
-    footer_privacy:    'Privacy Policy',
-    footer_terms:      'Terms of Service',
-    footer_cookies:    'Cookie Policy',
-    footer_tool:       'Tool',
-    footer_faq_link:   'FAQ',
-    footer_try:        'Try example',
-    footer_tech:       'Technology',
-    footer_copy:       '© 2025 SanitAI · No data leaves your device.',
-    // hero
-    hero_badge:        'GDPR · PCI DSS · 100% local',
-    hero_version:      'SanitAI v20',
+    title:'SanitAI',subtitle:'Clean your prompts before sending them to AI',
+    subtitle_sub:'Detects emails, passwords, IBANs, API keys and 20+ types of sensitive data. 100% local processing, no servers.',
+    badge:'GDPR · PCI DSS · 100% local',input_label:'Your text or prompt',
+    input_placeholder:'Paste your text, prompt, code or log here…\n\n  user@company.com  ·  sk-proj-abc123…\n  AKIA1234567890EXAMPLE  ·  GB29 NWBK 6016 1331 9268 19\n  password=s3cr3t!  ·  SSN: 123-45-6789\n  192.168.1.100  ·  tel: +1 555 123 4567',
+    clear_btn:'Clear ✕',file_label:'Select file',drop_text:'Drag a file here',
+    drop_sub:'or click to select',rules_label:'Active rules',enable_all:'Enable all',
+    disable_all:'Disable all',paranoid_label:'Paranoid Mode',sanitize_button:'Analyze & sanitize',
+    copy_button:'Copy result',download_button:'Download',reset_button:'Reset',
+    example_button:'⚡ Try example',output_label:'Result',tab_sanitized:'Sanitized',
+    tab_original:'Original',tab_compare:'Compare',detected_label:'Detected data',
+    session_label:'Session summary',protected_label:'data protected',score_label:'Privacy Score',
+    findings_label:'findings',scans_label:'scans',files_label:'files',categories_label:'categories',
+    coverage_label:'Coverage',safe:'🟢 Safe',warning:'🟡 Review',danger:'🔴 High risk',
+    processing:'Processing…',copied:'✓ copied',privacy_msg:'Your data is processed locally in your browser',
+    faq_title:'FAQ',legal_title:'Legal',tab_text:'Text / Prompt',tab_file:'File',
+    mode_basic:'Basic',mode_paranoid:'Paranoid',mode_label:'Mode:',
+    benefits_title:'Why sanitize before using AI?',
+    benefits_sub:'Every prompt sent to ChatGPT, Claude or Gemini may contain information you don\'t want shared with external servers.',
+    b1_title:'100% in your browser',b1_desc:'No data leaves your device. No servers, no database, no telemetry.',
+    b2_title:'GDPR compliance',b2_desc:'Avoid fines for transferring personal data without a signed DPA.',
+    b3_title:'20+ types detected',b3_desc:'Emails, IBANs, passwords, API keys, IDs, IPs, system paths, wallets and more.',
+    b4_title:'Supports Excel and Word',b4_desc:'Cleans .xlsx and .docx files cell by cell, without losing structure.',
+    footer_tagline:'Free privacy tool.\n100% local · no telemetry.',
+    footer_legal:'Legal',footer_privacy:'Privacy Policy',footer_terms:'Terms of Service',
+    footer_cookies:'Cookie Policy',footer_tool:'Tool',footer_faq_link:'FAQ',
+    footer_try:'Try example',footer_tech:'Technology',footer_copy:'© 2025 SanitAI · No data leaves your device.',
+    hero_badge:'GDPR · PCI DSS · 100% local',hero_version:'SanitAI v20',
   }
 };
-
 let currentLang = 'es';
-
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('ps-lang', lang);
   applyTranslations(lang);
-  // Update selector UI
   document.querySelectorAll('.lang-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.lang === lang);
   });
 }
-
 function t(key) {
   return (i18n[currentLang] || i18n.es)[key] || key;
 }
-
 function applyTranslations(lang) {
   const T = i18n[lang] || i18n.es;
-
-  // data-i18n elements — covers all tagged HTML nodes
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
     if (T[key] === undefined) return;
     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
       el.placeholder = T[key].replace(/\\n/g, '\n');
     } else if (el.tagName === 'BUTTON') {
-      // preserve inner SVG icons when button has only text node
       const icons = Array.from(el.childNodes).filter(n => n.nodeType === 1 && n.tagName === 'SVG');
       el.textContent = T[key];
       icons.forEach(svg => el.prepend(svg));
     } else if (T[key].includes('<br')) {
-      // i18n values are internal constants; strip stray < > for safety
       el.innerHTML = T[key].replace(/(?!<br\/?>)([<>])/g, c => c === '<' ? '&lt;' : '&gt;');
     } else {
       el.textContent = T[key];
     }
   });
-
-  // data-i18n-ph — placeholder-only elements
   document.querySelectorAll('[data-i18n-ph]').forEach(el => {
     const key = el.dataset.i18nPh;
     if (T[key] !== undefined) el.placeholder = T[key].replace(/\\n/g, '\n');
   });
-
-  // textarea placeholder (special: newlines in placeholder text)
   const ta = document.getElementById('input-text');
   if (ta && T['input_placeholder']) {
     ta.placeholder = T['input_placeholder'].replace(/\n/g, '\n');
   }
-
-  // Update FAQ section dynamically if already rendered
   renderFAQ && renderFAQ();
-
-  // Update riskLabel in live score
   const rb = document.getElementById('risk-badge');
   if (rb && rb.style.display !== 'none') {
     const score = parseInt(document.getElementById('score-pct')?.textContent) || 100;
@@ -1910,15 +1572,11 @@ function applyTranslations(lang) {
     rb.textContent = r.text;
   }
 }
-
 function initLanguage() {
   const saved = localStorage.getItem('ps-lang');
   const browserLang = navigator.language?.startsWith('en') ? 'en' : 'es';
   setLanguage(saved || browserLang);
 }
-
-
-// ── v19.1: Terms of use modal ────────────────────────────────────────────
 function acceptTerms() {
   const overlay = document.getElementById('terms-overlay');
   if (overlay) {
@@ -1928,24 +1586,18 @@ function acceptTerms() {
   }
   localStorage.setItem('ps-terms-accepted', '1');
 }
-
 function initTerms() {
-  // If already accepted, remove the overlay immediately (no flash)
   if (localStorage.getItem('ps-terms-accepted') === '1') {
     const overlay = document.getElementById('terms-overlay');
     if (overlay) overlay.remove();
   }
-  // Trap focus inside modal when visible
-  const box = document.getElementById('terms-box');
   const btn = document.getElementById('terms-accept');
   if (btn) btn.focus();
 }
-
 document.addEventListener('DOMContentLoaded', () => {
-  initTheme();                    // v11: apply saved theme
-  initLanguage();                 // v11: apply saved language
-  initTerms();                    // v19.1: show terms if not accepted
-  // v12: wire file input change listener
+  initTheme();
+  initLanguage();
+  initTerms();
   const _fi = document.getElementById('file-input');
   if (_fi) _fi.addEventListener('change', handleFileUpload);
   renderRulesGrid();
@@ -1957,15 +1609,10 @@ document.addEventListener('DOMContentLoaded', () => {
   state.originalText = '';
   state.viewMode = 'sanitized';
 });
-
-// ─────────────────────────────────────────────────────
-// RULES GRID
-// ─────────────────────────────────────────────────────
 function renderRulesGrid() {
   renderRuleSet(BASIC_RULES,    'rules-grid');
   renderRuleSet(PARANOID_RULES, 'paranoid-rules-grid');
 }
-
 function renderRuleSet(rules, containerId) {
   const el = document.getElementById(containerId);
   el.innerHTML = rules.map(r => {
@@ -1976,7 +1623,6 @@ function renderRuleSet(rules, containerId) {
     </div>`;
   }).join('');
 }
-
 function toggleRule(id) {
   const rule = [...BASIC_RULES,...PARANOID_RULES].find(r => r.id===id);
   if (!rule) return;
@@ -1987,7 +1633,6 @@ function toggleRule(id) {
   chip.querySelector('.dot').style.background    = rule._enabled ? '#10b981' : '#2a2a2a';
   chip.querySelector('.chip-label').style.color  = rule._enabled ? '#cccccc' : '#555555';
 }
-
 function toggleAllRules(on) {
   const rules = state.intensity === 'paranoid'
     ? [...BASIC_RULES,...PARANOID_RULES] : BASIC_RULES;
@@ -1997,10 +1642,6 @@ function toggleAllRules(on) {
     document.getElementById('paranoid-rules-section').style.display = 'block';
   }
 }
-
-// ─────────────────────────────────────────────────────
-// INTENSITY
-// ─────────────────────────────────────────────────────
 function setIntensity(mode) {
   state.intensity = mode;
   const pSection = document.getElementById('paranoid-rules-section');
@@ -2008,20 +1649,12 @@ function setIntensity(mode) {
   document.getElementById('intensity-paranoid').className = mode==='paranoid' ? 'mode-btn active-paranoid': 'mode-btn';
   pSection.style.display = mode==='paranoid' ? 'block' : 'none';
 }
-
-// ─────────────────────────────────────────────────────
-// TABS
-// ─────────────────────────────────────────────────────
 function switchTab(tab) {
   document.getElementById('panel-text').classList.toggle('hidden', tab!=='text');
   document.getElementById('panel-file').classList.toggle('hidden', tab!=='file');
   document.getElementById('tab-text').className = tab==='text' ? 'tab-btn active' : 'tab-btn';
   document.getElementById('tab-file').className = tab==='file' ? 'tab-btn active' : 'tab-btn';
 }
-
-// ─────────────────────────────────────────────────────
-// FILE HANDLING
-// ─────────────────────────────────────────────────────
 function setupDropZone() {
   const dz = document.getElementById('drop-zone');
   dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
@@ -2031,20 +1664,14 @@ function setupDropZone() {
     const f = e.dataTransfer.files[0]; if (f) processFile(f);
   });
 }
-
 function handleFileSelect(e) {
   const f = e.target.files[0]; if (f) processFile(f);
 }
-
-// v12: explicit FileReader listener per spec
-// v16: processDocx — arrayBuffer → mammoth → plain text
 async function processDocx(file) {
   const arrayBuffer = await file.arrayBuffer();
   const result      = await mammoth.extractRawText({ arrayBuffer });
   return result.value;
 }
-
-// v16: processXlsx — arrayBuffer → SheetJS → CSV text per sheet
 async function processXlsx(file) {
   const buffer   = await file.arrayBuffer();
   const workbook = XLSX.read(buffer, { type: 'array' });
@@ -2055,16 +1682,12 @@ async function processXlsx(file) {
   });
   return output;
 }
-
-// v16: async handleFileUpload — uses arrayBuffer() for binary formats
 async function handleFileUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
   window.currentFile = file;
   const ext    = file.name.split('.').pop().toLowerCase();
-  // Security: whitelist of allowed extensions — reject anything unexpected
   const ALLOWED_EXT = new Set(['txt','csv','log','json','py','js','ts','env','yaml','yml','xml','md','sh','toml','ini','xlsx','xls','docx']);
-  // Security: file size limit (10MB) — prevents browser freeze / DoS
   const MAX_SIZE = 10 * 1024 * 1024;
   if (file.size > MAX_SIZE) {
     const status = document.getElementById('fileStatus');
@@ -2080,17 +1703,14 @@ async function handleFileUpload(event) {
   }
   const status = document.getElementById('fileStatus');
   if (status) { status.textContent = 'Cargando archivo...'; status.style.display = 'block'; }
-
   const ta = document.getElementById('input-text');
   let text = '';
-
   try {
     if (ext === 'docx') {
       text = await processDocx(file);
     } else if (ext === 'xlsx' || ext === 'xls') {
       text = await processXlsx(file);
     } else {
-      // text formats — keep original FileReader path
       const reader = new FileReader();
       reader.onload = function(e) {
         ta.value = e.target.result;
@@ -2100,31 +1720,24 @@ async function handleFileUpload(event) {
       reader.readAsText(file, 'UTF-8');
       return;
     }
-
-    // binary formats: insert extracted text → trigger auto-scan
     ta.value = text;
     if (status) status.textContent = 'Archivo cargado: ' + file.name;
     ta.dispatchEvent(new Event('input'));
-
   } catch (err) {
     if (status) {
       status.textContent = 'Error al cargar: ' + file.name;
       status.style.color = 'var(--danger)';
     }
-    if (typeof console !== 'undefined') console.error('[APS] File processing error — see details in dev tools');
     alert('Error procesando el archivo. Formato no válido o archivo corrupto.');
     return;
   }
 }
-
 function processFile(file) {
   state.fileName = file.name.replace(/\.[^/.]+$/,'') + '_cleaned';
   const ext = file.name.split('.').pop().toLowerCase();
   const fi  = document.getElementById('file-info');
   document.getElementById('file-name').textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} KB)`;
-  document.getElementById('file-type-badge').textContent = `.${ext}`;
   fi.style.display = 'block';
-
   if (['xlsx','xls'].includes(ext)) {
     state.fileType = 'xlsx';
     const r = new FileReader();
@@ -2145,44 +1758,35 @@ function processFile(file) {
     r.readAsText(file,'UTF-8');
   }
 }
-
-// ─────────────────────────────────────────────────────
-// MAIN RUN
-// ─────────────────────────────────────────────────────
 async function runCleaner() {
   const btn = document.getElementById('btn-clean');
   btn.disabled = true;
   btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Analizando…';
-
   try {
     if      (state.fileType==='xlsx' && state.fileBuffer) await runXlsxCleaner();
     else if (state.fileType==='docx' && state.fileBuffer) await runDocxCleaner();
     else                                                    runTextCleaner();
   } catch(err) { flashError('Error: ' + err.message); }
-
   setTimeout(() => {
     btn.disabled = false;
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-2-8 2v7c0 6 8 10 8 10z"/></svg> Analizar y Sanitizar';
   }, 1000);
 }
-
 function runTextCleaner() {
   const input = document.getElementById('input-text').value.trim();
   if (!input) { flashError('Pega texto o sube un archivo.'); return; }
   const { output, detections } = sanitize(input);
   state.cleanedText  = output;
-  state.originalText = input;   // v6.2: guardar original para diff/preview
+  state.originalText = input;
   state.cleanedXlsx  = null;
   finishRun(detections, output, input.length, 'text');
 }
-
 async function runXlsxCleaner() {
   showSpinner(true);
   await tick();
   const wb = XLSX.read(new Uint8Array(state.fileBuffer), { type:'array', cellText:true });
   const allDet = [];
   let totalText = '';
-
   wb.SheetNames.forEach(name => {
     const ws = wb.Sheets[name];
     Object.keys(ws).filter(k => !k.startsWith('!')).forEach(addr => {
@@ -2202,7 +1806,6 @@ async function runXlsxCleaner() {
       }
     });
   });
-
   const bytes = XLSX.write(wb, { bookType:'xlsx', type:'array' });
   state.cleanedXlsx = bytes;
   state.cleanedText = `[Archivo Excel limpiado — ${wb.SheetNames.length} hoja(s). Descarga el .xlsx.]`;
@@ -2210,7 +1813,6 @@ async function runXlsxCleaner() {
   showSpinner(false);
   finishRun(allDet, state.cleanedText, totalText.length, 'xlsx');
 }
-
 async function runDocxCleaner() {
   if (typeof mammoth === 'undefined') throw new Error('Mammoth no disponible.');
   showSpinner(true);
@@ -2222,25 +1824,20 @@ async function runDocxCleaner() {
   showSpinner(false);
   finishRun(detections, output, rawText.length, 'docx');
 }
-
 function finishRun(detections, output, textLen, type) {
   const total = detections.reduce((a,d) => a+d.count, 0);
   const score = computeScore(detections, textLen);
-
   state.session.scans++;
   state.session.total += total;
   detections.forEach(d => {
     state.session.byCategory[d.label] = (state.session.byCategory[d.label]||0) + d.count;
     state.session.uniqueTypes.add(d.id);
   });
-
   renderOutput(output, total, type);
-  renderCurrentView();                    // v6.2: paint initial view
+  renderCurrentView();
   renderDetectionLog(detections);
   setScore(score, detections);
   updateStats();
-
-  // v6.2: risk badge
   const rb = document.getElementById('risk-badge');
   if (rb) {
     if (total === 0) {
@@ -2252,35 +1849,23 @@ function finishRun(detections, output, textLen, type) {
       rb.style.display = 'inline-block';
     }
   }
-
-  // v6.2: security banner turns green after scan
   const sb = document.getElementById('sec-banner');
   if (sb) sb.classList.add('active');
-
   document.getElementById('btn-copy').disabled     = false;
   document.getElementById('btn-download').disabled = false;
 }
-
 function showSpinner(on) {
   const el = document.getElementById('processing-indicator');
   el.style.display = on ? 'inline-flex' : 'none';
 }
-
 function tick() { return new Promise(r => setTimeout(r, 60)); }
-
-// ─────────────────────────────────────────────────────
-// OUTPUT RENDER
-// ─────────────────────────────────────────────────────
 const ALL_TOKENS = [
   'EMAIL','TELEFONO','DNI_NIE','IBAN','TARJETA','OPENAI_KEY','AWS_KEY','GCP_KEY',
   'SSH_PRIVATE_KEY','PGP_PRIVATE_KEY','JWT','CREDENTIAL','IP','USER','SYSPATH',
   'BTC_WALLET','ETH_WALLET','NOMBRE','MAC','URL_CREDENCIALES','HASH','DOCKER_DIGEST',
   'VALOR_REDACTADO','HANDLE','GITHUB_TOKEN','TOKEN_ALTA_ENTROPIA',
 ];
-
-// ── v6.2: current view mode ('sanitized' | 'original' | 'diff') ──────────
 state.viewMode = 'sanitized';
-
 function setView(mode) {
   state.viewMode = mode;
   ['sanitized','original','diff'].forEach(m => {
@@ -2289,7 +1874,6 @@ function setView(mode) {
   });
   if (state.cleanedText) renderCurrentView();
 }
-
 function renderCurrentView() {
   const preview = document.getElementById('output-preview');
   if (state.viewMode === 'original') {
@@ -2300,45 +1884,30 @@ function renderCurrentView() {
     preview.innerHTML = buildDiff(state.originalText || '', state.cleanedText);
     return;
   }
-  // sanitized (default)
   let html = escH(state.cleanedText);
   ALL_TOKENS.forEach(t => {
     html = html.replaceAll(`[${t}]`, `<span class="token">[${t}]</span>`);
   });
   preview.innerHTML = html;
 }
-
-// Build diff view: original text with removals + token replacements highlighted
-// Strategy: split both strings by [TOKEN] markers, interleave with diffs
 function buildDiff(orig, sanitized) {
   if (!orig) return escH(sanitized);
-
-  // Split sanitized by tokens to find replacement spans
   const tokenRe = /(\[[A-Z_]+\])/g;
   const parts = sanitized.split(tokenRe);
-  // parts alternates: text, [TOKEN], text, [TOKEN], ...
-
-  // Reconstruct sanitized without tokens to find what was removed
   let origCursor = 0;
   let out = '';
-
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i];
     if (/^\[[A-Z_]+\]$/.test(part)) {
-      // This is a [TOKEN] — find the next text in parts[i+1] to locate
-      // where in orig this token boundary is
       const nextText = parts[i + 1] || '';
-      // Find nextText in orig starting from cursor
       const nextIdx = nextText ? orig.indexOf(nextText, origCursor) : orig.length;
       const removedOrig = orig.slice(origCursor, nextIdx < 0 ? origCursor : nextIdx);
       origCursor = nextIdx < 0 ? origCursor : nextIdx;
-      // Show: removed original (strikethrough) → token replacement
       if (removedOrig) {
         out += `<mark class="diff-del" title="Original: ${escH(removedOrig)}">${escH(removedOrig)}</mark>`;
       }
       out += `<mark class="diff-ins">${escH(part)}</mark>`;
     } else {
-      // Regular text — advance cursor and output
       if (part) {
         const idx = orig.indexOf(part, origCursor);
         if (idx >= 0) origCursor = idx + part.length;
@@ -2348,13 +1917,9 @@ function buildDiff(orig, sanitized) {
   }
   return out;
 }
-
 function renderOutput(text, total, type) {
   document.getElementById('output-panel').style.display = 'block';
-
-  // Reset to sanitized view on each new run
   setView('sanitized');
-
   const badge = document.getElementById('output-badge');
   badge.textContent = total === 0
     ? '✓ sin datos sensibles'
@@ -2363,71 +1928,59 @@ function renderOutput(text, total, type) {
   if (type === 'xlsx') badge.textContent += ' · xlsx';
   else if (type === 'docx') badge.textContent += ' · docx';
 }
-
 function escH(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-
-// ─────────────────────────────────────────────────────
-// DETECTION LOG v6.2 — expandable rows + explanations
-// ─────────────────────────────────────────────────────
-
-// Explicaciones simples por tipo — reduce dudas "¿por qué me borró esto?"
 const EXPLAIN = {
-  email:       '📧 Dirección de correo electrónico detectada',
-  email_obf:   'Email ofuscado detectado (formato [at]/arroba/punto). Técnica de evasión neutralizada.',
+  email:'📧 Dirección de correo electrónico detectada',
+  email_obf:'Email ofuscado detectado (formato [at]/arroba/punto). Técnica de evasión neutralizada.',
   email_shadow:'Email con caracteres especiales que ocultaban el formato estándar.',
-  phone_es:    'Número de teléfono español (móvil 6xx/7xx o fijo 8xx/9xx con o sin +34).',
-  dni_nie:     'Documento Nacional de Identidad o NIE español (8 dígitos + letra).',
-  iban:        '🏦 Número de cuenta bancaria (IBAN) detectado',
-  iban_raw:    'Número de cuenta bancaria sin prefijo ES detectado por contexto.',
+  phone_es:'Número de teléfono español (móvil 6xx/7xx o fijo 8xx/9xx con o sin +34).',
+  dni_nie:'Documento Nacional de Identidad o NIE español (8 dígitos + letra).',
+  iban:'🏦 Número de cuenta bancaria (IBAN) detectado',
+  iban_raw:'Número de cuenta bancaria sin prefijo ES detectado por contexto.',
   iban_paranoid:'Secuencia de dígitos con longitud compatible con IBAN detectada en modo Paranoico.',
-  ipv4:        '🌐 Dirección IP detectada',
-  ip_loose:    'IP con separadores no estándar (comas/espacios). Técnica de evasión neutralizada.',
-  credit_card: '💳 Número de tarjeta de crédito o débito detectado',
-  openai_key:  'API Key de OpenAI (sk-...). Acceso completo a tu cuenta si se filtra.',
-  aws_key:     '🔑 AWS Access Key detectada',
-  gcp_key:     'Google Cloud API Key. Puede generar costes o acceso no autorizado.',
+  ipv4:'🌐 Dirección IP detectada',
+  ip_loose:'IP con separadores no estándar (comas/espacios). Técnica de evasión neutralizada.',
+  credit_card:'💳 Número de tarjeta de crédito o débito detectado',
+  openai_key:'API Key de OpenAI (sk-...). Acceso completo a tu cuenta si se filtra.',
+  aws_key:'🔑 AWS Access Key detectada',
+  gcp_key:'Google Cloud API Key. Puede generar costes o acceso no autorizado.',
   github_token:'GitHub Personal Access Token. Acceso a repositorios y código fuente.',
-  ssh_block:   '🔒 Clave privada SSH/RSA detectada',
-  pgp_block:   'Clave privada PGP. Permite descifrar mensajes cifrados con tu identidad.',
-  jwt:         'JSON Web Token. Puede incluir sesión activa o datos de autenticación.',
-  ctx_creds:   '🔒 Posible contraseña o token detectado por contexto',
-  path_unix:   'Ruta de sistema Unix/Mac con nombre de usuario.',
-  path_win:    'Ruta de sistema Windows con nombre de usuario.',
-  path_sys:    'Ruta de sistema sensible (/etc, /var, /proc...).',
-  btc:         'Wallet de Bitcoin. Dirección pública que puede revelar transacciones.',
-  eth:         'Wallet de Ethereum (0x...). Dirección pública de la cadena.',
+  ssh_block:'🔒 Clave privada SSH/RSA detectada',
+  pgp_block:'Clave privada PGP. Permite descifrar mensajes cifrados con tu identidad.',
+  jwt:'JSON Web Token. Puede incluir sesión activa o datos de autenticación.',
+  ctx_creds:'🔒 Posible contraseña o token detectado por contexto',
+  path_unix:'Ruta de sistema Unix/Mac con nombre de usuario.',
+  path_win:'Ruta de sistema Windows con nombre de usuario.',
+  path_sys:'Ruta de sistema sensible (/etc, /var, /proc...).',
+  btc:'Wallet de Bitcoin. Dirección pública que puede revelar transacciones.',
+  eth:'Wallet de Ethereum (0x...). Dirección pública de la cadena.',
   proper_nouns:'Nombre propio detectado en modo Paranoico. Solo palabras mid-sentence.',
-  mac:         'Dirección MAC de dispositivo (infraestructura de red).',
-  url_creds:   'URL con usuario:contraseña embebidos (formato http://user:pass@host).',
-  hash:        'Hash criptográfico (MD5/SHA1/SHA256). Puede identificar ficheros o contraseñas.',
-  docker_sha:  'Docker image digest (sha256:...). Identifica versión exacta de imagen.',
-  env_var:     'Variable de entorno con valor asignado (formato KEY=value de fichero .env).',
-  social:      'Handle de red social (@usuario).',
+  mac:'Dirección MAC de dispositivo (infraestructura de red).',
+  url_creds:'URL con usuario:contraseña embebidos (formato http://user:pass@host).',
+  hash:'Hash criptográfico (MD5/SHA1/SHA256). Puede identificar ficheros o contraseñas.',
+  docker_sha:'Docker image digest (sha256:...). Identifica versión exacta de imagen.',
+  env_var:'Variable de entorno con valor asignado (formato KEY=value de fichero .env).',
+  social:'Handle de red social (@usuario).',
   high_entropy:'String de alta entropía (>3.8 bits/char). Probable API key o secret sin prefijo conocido.',
 };
-
 function renderDetectionLog(detections) {
   const panel = document.getElementById('detection-log');
   const items = document.getElementById('log-items');
   if (!detections.length) { panel.style.display='none'; return; }
-
   const groups = {};
   detections.forEach(d => {
     if (!groups[d.group]) groups[d.group]=[];
     groups[d.group].push(d);
   });
-
   const sevDot = {
     critical: '<span style="width:6px;height:6px;border-radius:50%;background:#f87171;flex-shrink:0;display:inline-block;margin-right:5px" title="Crítico"></span>',
     high:     '<span style="width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0;display:inline-block;margin-right:5px" title="Alto"></span>',
     medium:   '<span style="width:6px;height:6px;border-radius:50%;background:#60a5fa;flex-shrink:0;display:inline-block;margin-right:5px" title="Medio"></span>',
     low:      '<span style="width:6px;height:6px;border-radius:50%;background:#2a2a2a;flex-shrink:0;display:inline-block;margin-right:5px" title="Bajo"></span>',
   };
-
   let html = '', delay = 0, rowIdx = 0;
-
   Object.entries(groups).forEach(([g,list]) => {
     html += `<p class="group-label">${g}</p>`;
     list.forEach(d => {
@@ -2453,11 +2006,9 @@ function renderDetectionLog(detections) {
       delay += 30;
     });
   });
-
   items.innerHTML = html;
   panel.style.display = 'block';
 }
-
 function toggleDetRow(rid) {
   const row = document.getElementById(rid);
   const exp = document.getElementById(rid + '-exp');
@@ -2468,23 +2019,15 @@ function toggleDetRow(rid) {
   const arr = row.querySelector('span:last-child');
   if (arr) arr.style.transform = isOpen ? '' : 'rotate(180deg)';
 }
-
-// ─────────────────────────────────────────────────────
-// PRIVACY SCORE
-// ─────────────────────────────────────────────────────
 function setScore(score, detections) {
   const pct   = score + '%';
   const total = detections ? detections.reduce((a,d)=>a+d.count,0) : 0;
-
-  // Color ramp
   let color;
   if      (score >= 85) color = '#10b981';
   else if (score >= 65) color = '#34d399';
   else if (score >= 45) color = '#fbbf24';
   else if (score >= 25) color = '#f97316';
   else                  color = '#f87171';
-
-  // Update both score bars (header + sidebar)
   ['score-bar','score-bar-2'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2497,18 +2040,12 @@ function setScore(score, detections) {
     el.textContent = pct;
     el.style.color  = color;
   });
-
-  // Header detect count
   const hdc = document.getElementById('header-detect-count');
   if (hdc) {
     hdc.textContent = total > 0 ? `${total} det.` : '—';
     hdc.style.color = total > 0 ? '#f87171' : '#555555';
   }
 }
-
-// ─────────────────────────────────────────────────────
-// SESSION STATS
-// ─────────────────────────────────────────────────────
 function updateStats() {
   animN('shield-count', state.session.total);
   animN('s-total',      state.session.total);
@@ -2517,7 +2054,6 @@ function updateStats() {
   animN('s-types',      state.session.uniqueTypes.size);
   renderStatsBreakdown();
 }
-
 function animN(id, target) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -2532,7 +2068,6 @@ function animN(id, target) {
   el.classList.add('stat-update');
   setTimeout(() => el.classList.remove('stat-update'), 500);
 }
-
 function renderStatsBreakdown() {
   const el = document.getElementById('stats-breakdown');
   const entries = Object.entries(state.session.byCategory).sort((a,b)=>b[1]-a[1]).slice(0,6);
@@ -2548,12 +2083,7 @@ function renderStatsBreakdown() {
     </div>`
   ).join('');
 }
-
-// ─────────────────────────────────────────────────────
-// ACTIONS
-// ─────────────────────────────────────────────────────
 function copyOutput() {
-  // v11: read plaintext from output element (strips HTML tokens markup)
   const el = document.getElementById('output-preview');
   const text = (el ? (el.innerText || el.textContent) : state.cleanedText)
     .replace(/\n{3,}/g, '\n\n')
@@ -2567,7 +2097,6 @@ function copyOutput() {
     btn.style.borderColor = 'rgba(52,211,153,.3)';
     setTimeout(() => { btn.innerHTML=orig; btn.style.color=''; btn.style.borderColor=''; }, 1800);
   }).catch(() => {
-    // Fallback for non-HTTPS contexts
     const ta = document.createElement('textarea');
     ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
@@ -2575,8 +2104,6 @@ function copyOutput() {
     document.body.removeChild(ta);
   });
 }
-
-// v13: preserve original filename + extension on download
 function getSanitizedFileName(originalName) {
   const parts = originalName.split('.');
   if (parts.length < 2) return originalName + '_sanitizado';
@@ -2584,7 +2111,6 @@ function getSanitizedFileName(originalName) {
   const base = parts.join('.');
   return base + '_sanitizado.' + ext;
 }
-
 function getMimeType(filename) {
   const ext = filename.split('.').pop().toLowerCase();
   const map = {
@@ -2596,9 +2122,7 @@ function getMimeType(filename) {
   };
   return map[ext] || 'text/plain';
 }
-
 function downloadOutput() {
-  // v15: docx/xlsx have proper pipelines — no hard stop needed here
   if (state.cleanedXlsx) {
     triggerDL(
       new Blob([new Uint8Array(state.cleanedXlsx)], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
@@ -2611,21 +2135,18 @@ function downloadOutput() {
     triggerDL(new Blob([state.cleanedText], { type: mime + ';charset=utf-8' }), dlName);
   }
 }
-
 function triggerDL(blob, filename) {
   const url = URL.createObjectURL(blob);
   const a   = Object.assign(document.createElement('a'), { href:url, download:filename });
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
 }
-
 function clearInput() { document.getElementById('input-text').value = ''; }
-
 function resetAll() {
   document.getElementById('input-text').value = '';
   state.cleanedText = ''; state.cleanedXlsx = null;
   state.fileBuffer = null; state.fileType = 'text';
-  window.currentFile = null;  // security: clear file reference on reset
+  window.currentFile = null;
   document.getElementById('output-panel').style.display    = 'none';
   document.getElementById('detection-log').style.display   = 'none';
   document.getElementById('btn-copy').disabled             = true;
@@ -2634,7 +2155,6 @@ function resetAll() {
   document.getElementById('file-input').value              = '';
   setScore(100, []);
 }
-
 function flashError(msg) {
   const btn = document.getElementById('btn-clean');
   btn.textContent = '✕ ' + msg;
@@ -2646,10 +2166,6 @@ function flashError(msg) {
     btn.style.color = '#050505';
   }, 2500);
 }
-
-// ─────────────────────────────────────────────────────
-// FAQ
-// ─────────────────────────────────────────────────────
 const FAQ_DATA = {
   es: [
     { q:'¿Los datos se envían a algún servidor?',
@@ -2676,15 +2192,10 @@ const FAQ_DATA = {
       a:'The detection engine works offline. CDN fonts and libraries require a connection the first time, but processing is always local.' },
   ],
 };
-
-// ─────────────────────────────────────────────────────
-// v6.2 — DEMO EXAMPLE
-// ─────────────────────────────────────────────────────
 function loadExample() {
   const example = `usuario@gmail.com
 ES91 2100 0418 4502 0005 1332
 password=123456
-
 — Más ejemplos —
 📧 Email:    javier.admin@empresa.es
 🏦 IBAN:     ES21 1465 0100 72 2030876293
@@ -2692,24 +2203,17 @@ password=123456
 🔒 Token:    db_password: "SuperSecret_Pass_2026!"
 ☁️  AWS Key:  AKIA1234567890EXAMPLE
 🌐 IP:       192.168.1.105`;
-
   const ta = document.getElementById('input-text');
   ta.value = example;
   switchTab('text');
-  // Auto-trigger scan after a brief pause
   setTimeout(() => { if (document.getElementById('input-text').value) runCleaner(); }, 300);
 }
-
-// ─────────────────────────────────────────────────────
-// v6.2 — AUTO-SCAN (debounce 500ms)
-// ─────────────────────────────────────────────────────
 let _autoScanTimer = null;
 function setupAutoScan() {
   const ta = document.getElementById('input-text');
   if (!ta) return;
   ta.addEventListener('input', () => {
     clearTimeout(_autoScanTimer);
-    // Only auto-scan if there's meaningful text (>30 chars)
     _autoScanTimer = setTimeout(() => {
       if (ta.value.trim().length > 30 && state.fileType === 'text') {
         runCleaner();
@@ -2717,7 +2221,6 @@ function setupAutoScan() {
     }, 500);
   });
 }
-
 function renderFAQ() {
   const FAQ = (FAQ_DATA[currentLang] || FAQ_DATA.es);
   document.getElementById('faq-list').innerHTML = FAQ.map((item, i) => `
@@ -2737,7 +2240,6 @@ function renderFAQ() {
     </div>
   `).join('');
 }
-
 function toggleFAQ(i) {
   const bd  = document.getElementById(`faq-bd-${i}`);
   const arr = document.getElementById(`faq-arr-${i}`);
@@ -2745,8 +2247,6 @@ function toggleFAQ(i) {
   bd.style.display    = open ? 'none' : 'block';
   arr.style.transform = open ? '' : 'rotate(180deg)';
 }
-
-// ── v7: emoji map for rule labels ──────────────────────────────────────────
 const RULE_EMOJI = {
   email:'📧', email_obf:'📧', email_shadow:'📧',
   phone_es:'📱', phone_ctx:'📱',
@@ -2763,8 +2263,6 @@ const RULE_EMOJI = {
   hash:'#', docker_sha:'🐳', env_var:'⚙️', social:'@',
   high_entropy:'🎲',
 };
-
-// Override renderRuleSet to use light-mode toggle styles
 function renderRuleSet(rules, gridId) {
   const grid = document.getElementById(gridId);
   if (!grid) return;
@@ -2785,10 +2283,6 @@ function renderRuleSet(rules, gridId) {
     grid.appendChild(el);
   });
 }
-
-// ─────────────────────────────────────────────────────
-// v11: Dark / Light theme toggle
-// ─────────────────────────────────────────────────────
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
@@ -2797,9 +2291,7 @@ function toggleTheme() {
   localStorage.setItem('ps-theme', next);
   document.getElementById('theme-toggle').textContent = next === 'dark' ? '🌙' : '☀️';
 }
-
 function initTheme() {
-  // Prefer saved, then system preference
   const saved = localStorage.getItem('ps-theme');
   const sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const theme = saved || (sysDark ? 'dark' : 'light');
@@ -2807,8 +2299,7 @@ function initTheme() {
   const btn = document.getElementById('theme-toggle');
   if (btn) btn.textContent = theme === 'dark' ? '🌙' : '☀️';
 }
-
-// Run immediately (before DOMContentLoaded to avoid flash)
 initTheme();
-
 </script>
+</body>
+</html>
